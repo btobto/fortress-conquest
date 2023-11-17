@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Fortress Conquest</string>
+
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="error_field_empty">%s field cannot be empty.</string>
+    <string name="error_email_invalid">Not a valid email.</string>
+    <string name="error_password_invalid">Not a valid password.</string>
+    <string name="error_password_short">Password must be at least %d characters long.</string>
+</resources>
