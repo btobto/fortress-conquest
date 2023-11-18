@@ -1,4 +1,4 @@
-package com.example.fortressconquest.common
+package com.example.fortressconquest.common.model
 
 sealed interface ValidationResult{
     object Success: ValidationResult

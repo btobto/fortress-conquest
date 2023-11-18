@@ -29,11 +29,7 @@ fun FortressConquestApp() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            LoginScreen(
-                onEmailValueChange =  {},
-                onPasswordValueChange = {},
-                onLogin = {}
-            )
+            LoginScreen(onNavigateToRegisterScreen = {})
         }
     }
 }

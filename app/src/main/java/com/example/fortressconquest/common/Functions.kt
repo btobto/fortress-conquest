@@ -2,13 +2,14 @@ package com.example.fortressconquest.common
 
 import android.util.Patterns
 import com.example.fortressconquest.R
+import com.example.fortressconquest.common.model.UiText
+import com.example.fortressconquest.common.model.ValidationResult
 
 fun validateEmail(input: String): ValidationResult {
     if (input.isBlank()) {
         return ValidationResult.Error(
             UiText.StringResource(
-                resId = R.string.error_field_empty,
-                args = arrayOf(R.string.email)
+                resId = R.string.error_email_empty
             )
         )
     }

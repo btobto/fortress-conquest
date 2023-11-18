@@ -1,4 +1,4 @@
-package com.example.fortressconquest.common
+package com.example.fortressconquest.common.model
 
 import android.content.Context
 import androidx.annotation.StringRes
@@ -16,7 +16,7 @@ sealed class UiText {
     fun asString(): String {
         return when (this) {
             is DynamicString -> value
-            is StringResource -> stringResource(id = resId, formatArgs = *args)
+            is StringResource -> stringResource(id = resId, formatArgs = args)
         }
     }
 

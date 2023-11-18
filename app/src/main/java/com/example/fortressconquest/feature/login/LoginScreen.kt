@@ -1,15 +1,14 @@
 package com.example.fortressconquest.feature.login
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,19 +17,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.input.ImeAction
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fortressconquest.R
+import com.example.fortressconquest.common.composables.EmailInputField
+import com.example.fortressconquest.common.composables.PasswordInputField
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun LoginScreen(
     loginViewModel: LoginViewModel = hiltViewModel(),
-    onEmailValueChange: (String) -> Unit,
-    onPasswordValueChange: (String) -> Unit,
-    onLogin: () -> Unit,
+    onNavigateToRegisterScreen: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val loginState by loginViewModel.loginState.collectAsStateWithLifecycle()
@@ -50,22 +48,39 @@ fun LoginScreen(
                 .fillMaxWidth(0.4f)
                 .padding(vertical = dimensionResource(id = R.dimen.padding_medium))
         )
-        OutlinedTextField(
-            value = loginState.email,
-            singleLine = true,
-            label = { Text(text = stringResource(id = R.string.email)) },
-            onValueChange = onEmailValueChange
+        Text(
+            text = stringResource(id = R.string.app_name),
+            style = MaterialTheme.typography.displaySmall
         )
-        OutlinedTextField(
+        EmailInputField(
+            value = loginState.email,
+            onValueChange = loginViewModel::updateEmail,
+            errorMessage = loginState.emailError?.asString(),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            )
+        )
+        PasswordInputField(
             value = loginState.password,
-            singleLine = true,
-            label = { Text(text = stringResource(id = R.string.password)) },
-            onValueChange = onPasswordValueChange
+            onValueChange = loginViewModel::updatePassword,
+            onTogglePasswordVisibility = loginViewModel::togglePasswordVisibility,
+            isPasswordVisible = loginState.isPasswordVisible,
+            errorMessage = loginState.passwordError?.asString(),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done
+            )
         )
         Button(
-            onClick = onLogin
+            onClick = loginViewModel::submit,
+            enabled = loginViewModel.validForm()
         ) {
             Text(text = stringResource(id = R.string.login))
         }
+        Text(
+            text = stringResource(id = R.string.register),
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+                .clickable(onClick = onNavigateToRegisterScreen)
+        )
     }
 }
