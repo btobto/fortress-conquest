@@ -1,4 +1,4 @@
-package com.example.fortressconquest.feature.login
+package com.example.fortressconquest.ui.screens.login
 
 import androidx.lifecycle.ViewModel
 import com.example.fortressconquest.common.model.UiText
@@ -55,11 +55,12 @@ class LoginViewModel @Inject constructor(): ViewModel() {
     }
 
     fun validForm(): Boolean {
-        val state = loginState.value
-        return state.emailError == null &&
-               state.passwordError == null &&
-               state.email.isNotBlank() &&
-               state.password.isNotBlank()
+        return loginState.value.run {
+            emailError == null &&
+            passwordError == null &&
+            email.isNotBlank() &&
+            password.isNotBlank()
+        }
     }
 
     private fun getErrorText(validationResult: ValidationResult): UiText? {

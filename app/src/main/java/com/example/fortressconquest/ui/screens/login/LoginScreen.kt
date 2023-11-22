@@ -1,4 +1,4 @@
-package com.example.fortressconquest.feature.login
+package com.example.fortressconquest.ui.screens.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -21,14 +21,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fortressconquest.R
-import com.example.fortressconquest.common.composables.EmailInputField
-import com.example.fortressconquest.common.composables.PasswordInputField
+import com.example.fortressconquest.ui.components.EmailInputField
+import com.example.fortressconquest.ui.components.PasswordInputField
 
 
 @Composable
 fun LoginScreen(
-    loginViewModel: LoginViewModel = hiltViewModel(),
     onNavigateToRegisterScreen: () -> Unit,
+    loginViewModel: LoginViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
     val loginState by loginViewModel.loginState.collectAsStateWithLifecycle()

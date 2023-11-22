@@ -1,4 +1,4 @@
-package com.example.fortressconquest.common.composables
+package com.example.fortressconquest.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.text.KeyboardOptions

@@ -8,7 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.example.fortressconquest.feature.login.LoginScreen
+import com.example.fortressconquest.ui.screens.login.LoginScreen
 import com.example.fortressconquest.ui.theme.FortressConquestTheme
 import dagger.hilt.android.AndroidEntryPoint
 
