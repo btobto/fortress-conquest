@@ -1,14 +1,16 @@
 package com.example.fortressconquest.domain.repository
 
+import com.example.fortressconquest.domain.model.AuthState
+import com.example.fortressconquest.domain.model.RegistrationData
+import com.example.fortressconquest.domain.model.LoginData
 import com.example.fortressconquest.domain.model.Response
 import com.example.fortressconquest.domain.model.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
 
 interface AuthRepository {
-    suspend fun register(email: String, password: String): Response<Boolean>
-    suspend fun login(email: String, password: String): Response<Boolean>
+    suspend fun register(registrationData: RegistrationData): Response<Boolean>
+    suspend fun login(loginData: LoginData): Response<Boolean>
     fun logout()
-    fun getCurrentUser(scope: CoroutineScope): StateFlow<User?>
-    fun isAuthenticated(scope: CoroutineScope): StateFlow<Boolean>
+    fun getAuthState(scope: CoroutineScope): StateFlow<AuthState>
 }

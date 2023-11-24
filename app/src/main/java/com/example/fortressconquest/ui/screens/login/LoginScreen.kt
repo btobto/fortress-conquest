@@ -1,11 +1,8 @@
 package com.example.fortressconquest.ui.screens.login
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -15,7 +12,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -23,11 +19,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fortressconquest.R
 import com.example.fortressconquest.ui.components.EmailInputField
 import com.example.fortressconquest.ui.components.PasswordInputField
+import com.example.fortressconquest.ui.components.SplashAppLogo
 
 
 @Composable
 fun LoginScreen(
     onNavigateToRegisterScreen: () -> Unit,
+    onUserLogin: () -> Unit,
     loginViewModel: LoginViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
@@ -41,17 +39,7 @@ fun LoginScreen(
             Alignment.CenterVertically
         )
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth(0.4f)
-                .padding(vertical = dimensionResource(id = R.dimen.padding_medium))
-        )
-        Text(
-            text = stringResource(id = R.string.app_name),
-            style = MaterialTheme.typography.displaySmall
-        )
+        SplashAppLogo(fraction = 0.4f)
         EmailInputField(
             value = loginState.email,
             onValueChange = loginViewModel::updateEmail,
