@@ -3,6 +3,8 @@ package com.example.fortressconquest.ui.screens.login
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -14,10 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fortressconquest.R
-import com.example.fortressconquest.ui.components.EmailInputField
+import com.example.fortressconquest.ui.components.OutlinedInputFieldWithError
 import com.example.fortressconquest.ui.components.PasswordInputField
 import com.example.fortressconquest.ui.components.SplashAppLogo
 
@@ -25,14 +28,17 @@ import com.example.fortressconquest.ui.components.SplashAppLogo
 @Composable
 fun LoginScreen(
     onNavigateToRegisterScreen: () -> Unit,
-    onUserLogin: () -> Unit,
+    onLoginSuccess: () -> Unit,
+    onLoginFailure: (String) -> Unit,
     loginViewModel: LoginViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
-    val loginState by loginViewModel.loginState.collectAsStateWithLifecycle()
+    val loginState by loginViewModel.loginFormState.collectAsStateWithLifecycle()
 
     Column(
-        modifier = modifier,
+        modifier = modifier
+            .padding(vertical = dimensionResource(id = R.dimen.padding_large))
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(
             dimensionResource(id = R.dimen.padding_medium), 
@@ -40,32 +46,36 @@ fun LoginScreen(
         )
     ) {
         SplashAppLogo(fraction = 0.4f)
-        EmailInputField(
-            value = loginState.email,
+
+        OutlinedInputFieldWithError(
+            field = loginState.email,
             onValueChange = loginViewModel::updateEmail,
-            errorMessage = loginState.emailError?.asString(),
+            label = R.string.email,
             keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next
             )
         )
+
         PasswordInputField(
-            value = loginState.password,
+            value = loginState.password.value,
             onValueChange = loginViewModel::updatePassword,
             onTogglePasswordVisibility = loginViewModel::togglePasswordVisibility,
             isPasswordVisible = loginState.isPasswordVisible,
-            errorMessage = loginState.passwordError?.asString(),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done
             )
         )
+
         Button(
-            onClick = loginViewModel::submit,
-            enabled = loginViewModel.validForm()
+            onClick = { loginViewModel.submit(onLoginSuccess, onLoginFailure) },
+            enabled = loginViewModel.isFormValid()
         ) {
             Text(text = stringResource(id = R.string.login))
         }
+
         Text(
-            text = stringResource(id = R.string.register),
+            text = stringResource(id = R.string.redirect_register_button),
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .clickable(onClick = onNavigateToRegisterScreen)

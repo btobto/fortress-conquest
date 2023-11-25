@@ -55,9 +55,8 @@ fun PasswordInputField(
                 keyboardType = KeyboardType.Password
             )
         )
-        if (errorMessage != null) {
-            InputErrorText(errorMessage = errorMessage)
+        errorMessage?.let {
+            InputErrorText(errorMessage = it)
         }
     }
-
 }

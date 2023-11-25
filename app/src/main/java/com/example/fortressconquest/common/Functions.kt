@@ -37,3 +37,30 @@ fun validatePassword(input: String): ValidationResult {
 
     return ValidationResult.Success
 }
+
+fun validatePhoneNumber(input: String): ValidationResult {
+    if (input.isBlank()) {
+        return ValidationResult.Error(
+            UiText.StringResource(
+                resId = R.string.error_phone_empty
+            )
+        )
+    }
+
+    if (!Regex("^\\d+\$").matches(input)) {
+        return ValidationResult.Error(
+            UiText.StringResource(
+                resId = R.string.error_phone_non_digits
+            )
+        )
+    }
+
+    return ValidationResult.Success
+}
+
+fun getErrorText(validationResult: ValidationResult): UiText? {
+    return when (validationResult) {
+        is ValidationResult.Error -> validationResult.error
+        is ValidationResult.Success -> null
+    }
+}

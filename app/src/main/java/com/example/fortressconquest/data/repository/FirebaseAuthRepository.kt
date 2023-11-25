@@ -7,29 +7,33 @@ import com.example.fortressconquest.domain.model.Response
 import com.example.fortressconquest.domain.model.User
 import com.example.fortressconquest.domain.repository.AuthRepository
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.tasks.await
+import java.io.IOException
 import javax.inject.Inject
 
 class FirebaseAuthRepository @Inject constructor(
     private val auth: FirebaseAuth
 ) : AuthRepository {
 
-    override suspend fun register(registrationData: RegistrationData): Response<Boolean> = try {
+    override suspend fun register(registrationData: RegistrationData): Response<Boolean> =
+        try {
             registrationData.run {
                 auth.createUserWithEmailAndPassword(email, password).await()
             }
             Response.Success(true)
-        } catch (e: Exception) {
-            Response.Error(e)
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+            Response.Error("Invalid email or password.")
+        } catch (e: IOException) {
+            Response.Error("No internet connection.")
         }
 
     override suspend fun login(loginData: LoginData): Response<Boolean> =
@@ -38,8 +42,10 @@ class FirebaseAuthRepository @Inject constructor(
                 auth.signInWithEmailAndPassword(email, password).await()
             }
             Response.Success(true)
-        } catch (e: Exception) {
-            Response.Error(e)
+        } catch (e: FirebaseAuthUserCollisionException) {
+            Response.Error("Account already exists.")
+        } catch (e: IOException) {
+            Response.Error("No internet connection.")
         }
 
     override fun logout() = auth.signOut()
