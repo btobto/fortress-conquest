@@ -43,6 +43,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -83,6 +84,9 @@ dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
     implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-storage")
+
+    implementation("io.coil-kt:coil-compose:2.5.0")
 }
 
 kapt {

@@ -1,5 +1,7 @@
 package com.example.fortressconquest.ui.screens.register
 
+import android.net.Uri
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import com.example.fortressconquest.R
@@ -18,11 +20,12 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 data class RegisterFormState(
-    val email: FormField = FormField(""),
-    val password: FormField = FormField(""),
-    val firstName: FormField = FormField(""),
-    val lastName: FormField = FormField(""),
-    val phoneNumber: FormField = FormField(""),
+    val email: FormField = FormField(),
+    val password: FormField = FormField(),
+    val firstName: FormField = FormField(),
+    val lastName: FormField = FormField(),
+    val phoneNumber: FormField = FormField(),
+    val imageUri: Uri = Uri.EMPTY,
     val isPasswordVisible: Boolean = false
 )
 
@@ -98,6 +101,16 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
+    fun updateImageUri(uri: Uri) {
+        Log.i("IMAGE", if (Uri.EMPTY.equals(uri)) "EMPTY URI" else uri.toString())
+
+        _registerFormState.update { currentState ->
+            currentState.copy(
+                imageUri = uri
+            )
+        }
+    }
+
     fun togglePasswordVisibility() {
         _registerFormState.update { currentState ->
             currentState.copy(isPasswordVisible = !currentState.isPasswordVisible)
@@ -113,7 +126,12 @@ class RegisterViewModel @Inject constructor(
 
     fun isFormValid(): Boolean {
         return _registerFormState.value.run {
-            email.isValid() && password.isValid() && firstName.isValid() && lastName.isValid() && phoneNumber.isValid()
+            email.isValid() &&
+            password.isValid() &&
+            firstName.isValid() &&
+            lastName.isValid() &&
+            phoneNumber.isValid() &&
+            !Uri.EMPTY.equals(imageUri)
         }
     }
 

@@ -20,8 +20,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class LoginFormState(
-    val email: FormField = FormField(""),
-    val password: FormField = FormField(""),
+    val email: FormField = FormField(),
+    val password: FormField = FormField(),
     val isPasswordVisible: Boolean = false
 )
 
