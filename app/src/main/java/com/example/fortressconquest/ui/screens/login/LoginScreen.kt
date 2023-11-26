@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fortressconquest.R
+import com.example.fortressconquest.domain.model.Response
 import com.example.fortressconquest.ui.components.OutlinedInputFieldWithError
 import com.example.fortressconquest.ui.components.PasswordInputField
 import com.example.fortressconquest.ui.components.SplashAppLogo
@@ -33,7 +36,8 @@ fun LoginScreen(
     loginViewModel: LoginViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
-    val loginState by loginViewModel.loginFormState.collectAsStateWithLifecycle()
+    val formState by loginViewModel.loginFormState.collectAsStateWithLifecycle()
+    val responseState by loginViewModel.loginResponseState.collectAsStateWithLifecycle()
 
     Column(
         modifier = modifier
@@ -41,14 +45,14 @@ fun LoginScreen(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(
-            dimensionResource(id = R.dimen.padding_medium), 
+            dimensionResource(id = R.dimen.padding_small),
             Alignment.CenterVertically
         )
     ) {
         SplashAppLogo(fraction = 0.4f)
 
         OutlinedInputFieldWithError(
-            field = loginState.email,
+            field = formState.email,
             onValueChange = loginViewModel::updateEmail,
             label = R.string.email,
             keyboardOptions = KeyboardOptions(
@@ -58,17 +62,17 @@ fun LoginScreen(
         )
 
         PasswordInputField(
-            value = loginState.password.value,
+            value = formState.password.value,
             onValueChange = loginViewModel::updatePassword,
             onTogglePasswordVisibility = loginViewModel::togglePasswordVisibility,
-            isPasswordVisible = loginState.isPasswordVisible,
+            isPasswordVisible = formState.isPasswordVisible,
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done
             )
         )
 
         Button(
-            onClick = { loginViewModel.submit(onLoginSuccess, onLoginFailure) },
+            onClick = loginViewModel::submit,
             enabled = loginViewModel.isFormValid()
         ) {
             Text(text = stringResource(id = R.string.login))
@@ -80,5 +84,16 @@ fun LoginScreen(
             modifier = Modifier
                 .clickable(onClick = onNavigateToRegisterScreen)
         )
+    }
+
+    when (val response = responseState) {
+        is Response.Success -> LaunchedEffect(responseState) {
+            onLoginSuccess()
+        }
+        is Response.Error -> LaunchedEffect(responseState) {
+            onLoginFailure(response.error)
+            loginViewModel.resetError()
+        }
+        else -> Unit
     }
 }

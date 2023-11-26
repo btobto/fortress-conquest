@@ -1,5 +1,6 @@
 package com.example.fortressconquest.ui.screens.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fortressconquest.common.getErrorText
@@ -32,8 +33,8 @@ class LoginViewModel @Inject constructor(
     private val _loginFormState = MutableStateFlow(LoginFormState())
     val loginFormState: StateFlow<LoginFormState> = _loginFormState.asStateFlow()
 
-//    private val _loginResponseState: MutableStateFlow<Response<Boolean>?> = MutableStateFlow(null)
-//    val loginResponseState: StateFlow<Response<Boolean>?> = _loginResponseState.asStateFlow()
+    private val _loginResponseState: MutableStateFlow<Response<Boolean>> = MutableStateFlow(Response.None)
+    val loginResponseState: StateFlow<Response<Boolean>> = _loginResponseState.asStateFlow()
 
     fun updateEmail(input: String) {
         _loginFormState.update { currentState ->
@@ -64,11 +65,10 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun submit(
-        onLoginSuccess: () -> Unit,
-        onLoginFailure: (String) -> Unit
-    ) {
+    fun submit() {
         viewModelScope.launch {
+            _loginResponseState.update { Response.Loading }
+
             val response = loginFormState.value.run {
                 authRepository.login(
                     LoginData(
@@ -78,11 +78,13 @@ class LoginViewModel @Inject constructor(
                 )
             }
 
-            when (response) {
-                is Response.Success -> onLoginSuccess()
-                is Response.Error -> onLoginFailure(response.error)
-                else -> Unit
-            }
+            _loginResponseState.update { response }
+        }
+    }
+
+    fun resetError() {
+        if (loginResponseState.value is Response.Error) {
+            _loginResponseState.update { Response.None }
         }
     }
 

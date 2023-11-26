@@ -3,7 +3,6 @@ package com.example.fortressconquest.ui.components
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.runtime.Composable
@@ -23,7 +22,7 @@ fun ChooseImageButton(
     FilledTonalButtonWithIcon(
         onClick = { launcher.launch("image/*") },
         icon = Icons.Outlined.Image,
-        labelId = R.string.button_choose_gallery,
+        labelId = R.string.button_select_picture,
         modifier = modifier
     )
 }

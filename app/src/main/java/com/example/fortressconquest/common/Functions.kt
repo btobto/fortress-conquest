@@ -1,6 +1,9 @@
 package com.example.fortressconquest.common
 
+import android.content.Context
 import android.util.Patterns
+import android.widget.Toast
+import androidx.annotation.StringRes
 import com.example.fortressconquest.R
 import com.example.fortressconquest.common.model.UiText
 import com.example.fortressconquest.common.model.ValidationResult
@@ -63,4 +66,14 @@ fun getErrorText(validationResult: ValidationResult): UiText? {
         is ValidationResult.Error -> validationResult.error
         is ValidationResult.Success -> null
     }
+}
+
+fun showToast(context: Context, @StringRes messageId: Int) {
+    Toast.makeText(
+        context,
+        UiText.StringResource(
+            resId = messageId
+        ).asString(context),
+        Toast.LENGTH_SHORT
+    ).show()
 }

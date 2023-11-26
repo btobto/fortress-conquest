@@ -52,7 +52,7 @@ fun SplashScreenContent(modifier: Modifier = Modifier) {
         SplashAppLogo(fraction = 0.4f)
         Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.padding_large)))
         CircularProgressIndicator(
-            modifier.width(64.dp),
+            Modifier.width(64.dp),
             color = MaterialTheme.colorScheme.secondary
         )
     }

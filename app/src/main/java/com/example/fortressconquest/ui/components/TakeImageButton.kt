@@ -3,16 +3,11 @@ package com.example.fortressconquest.ui.components
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
@@ -21,6 +16,7 @@ import com.example.fortressconquest.BuildConfig
 import com.example.fortressconquest.R
 import java.io.File
 import android.Manifest
+import androidx.compose.material.icons.outlined.PhotoCamera
 
 @Composable
 fun TakeImageButton(
@@ -31,16 +27,9 @@ fun TakeImageButton(
     val context = LocalContext.current
     val uri = getImageUri(context)
 
-    var imageUri by remember {
-        mutableStateOf<Uri>(Uri.EMPTY)
-    }
-
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
-        onResult = {
-            imageUri = if (it) uri else Uri.EMPTY
-            onImageTaken(imageUri)
-        }
+        onResult = { onImageTaken(if (it) uri else Uri.EMPTY) }
     )
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -56,15 +45,15 @@ fun TakeImageButton(
 
     FilledTonalButtonWithIcon(
         onClick = {
-            val permissionGranted =
-                ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
-            if (permissionGranted == PackageManager.PERMISSION_GRANTED) {
+            val granted = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+
+            if (granted == PackageManager.PERMISSION_GRANTED) {
                 cameraLauncher.launch(uri)
             } else {
                 permissionLauncher.launch(Manifest.permission.CAMERA)
             }
         },
-        icon = Icons.Outlined.Image,
+        icon = Icons.Outlined.PhotoCamera,
         labelId = R.string.button_take_picture,
         modifier = modifier
     )

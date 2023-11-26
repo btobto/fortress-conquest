@@ -4,6 +4,7 @@ import com.example.fortressconquest.data.repository.FirebaseAuthRepository
 import com.example.fortressconquest.domain.repository.AuthRepository
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.storage.storage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,5 +17,6 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(): AuthRepository = FirebaseAuthRepository(Firebase.auth)
+    fun provideAuthRepository(): AuthRepository =
+        FirebaseAuthRepository(Firebase.auth, Firebase.storage)
 }

@@ -9,10 +9,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel() ,
+    onLogout: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Text(text = "home")
-    Button(onClick = homeViewModel::logout) {
+    Button(onClick = {
+        homeViewModel.logout()
+        onLogout()
+    }) {
         Text(text = "log out")
     }
 }

@@ -52,7 +52,11 @@ fun FortressConquestApp() {
                 }
 
                 composable(route = Destination.Home.route) {
-                    HomeScreen()
+                    HomeScreen(
+                        onLogout = {
+                            navController.navigateAndClearBackStack(Destination.Login.route)
+                        }
+                    )
                 }
 
                 composable(route = Destination.Login.route) {

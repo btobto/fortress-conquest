@@ -1,9 +1,9 @@
 package com.example.fortressconquest.ui.screens.register
 
 import android.net.Uri
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.fortressconquest.R
 import com.example.fortressconquest.common.getErrorText
 import com.example.fortressconquest.common.model.UiText
@@ -11,12 +11,16 @@ import com.example.fortressconquest.common.model.ValidationResult
 import com.example.fortressconquest.common.validateEmail
 import com.example.fortressconquest.common.validatePassword
 import com.example.fortressconquest.common.validatePhoneNumber
+import com.example.fortressconquest.domain.model.RegistrationData
+import com.example.fortressconquest.domain.model.Response
 import com.example.fortressconquest.domain.repository.AuthRepository
 import com.example.fortressconquest.ui.utils.FormField
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class RegisterFormState(
@@ -35,6 +39,9 @@ class RegisterViewModel @Inject constructor(
 ): ViewModel() {
     private val _registerFormState = MutableStateFlow(RegisterFormState())
     val registerFormState = _registerFormState.asStateFlow()
+
+    private val _registerResponseState: MutableStateFlow<Response<Boolean>> = MutableStateFlow(Response.None)
+    val registerResponseState: StateFlow<Response<Boolean>> = _registerResponseState.asStateFlow()
 
     fun updateEmail(input: String) {
         _registerFormState.update { currentState ->
@@ -102,8 +109,6 @@ class RegisterViewModel @Inject constructor(
     }
 
     fun updateImageUri(uri: Uri) {
-        Log.i("IMAGE", if (Uri.EMPTY.equals(uri)) "EMPTY URI" else uri.toString())
-
         _registerFormState.update { currentState ->
             currentState.copy(
                 imageUri = uri
@@ -117,11 +122,31 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    fun submit(
-        onRegisterSuccess: () -> Unit,
-        onRegisterFailure: (String) -> Unit
-    ) {
+    fun submit() {
+        viewModelScope.launch {
+            _registerResponseState.update { Response.Loading }
 
+            val response = registerFormState.value.run {
+                authRepository.register(
+                    RegistrationData(
+                        email = email.value,
+                        password = password.value,
+                        firstName = firstName.value,
+                        lastName = lastName.value,
+                        phoneNumber = phoneNumber.value,
+                        imageUri = imageUri
+                    )
+                )
+            }
+
+            _registerResponseState.update { response }
+        }
+    }
+
+    fun resetError() {
+        if (registerResponseState.value is Response.Error) {
+            _registerResponseState.update { Response.None }
+        }
     }
 
     fun isFormValid(): Boolean {
@@ -138,8 +163,8 @@ class RegisterViewModel @Inject constructor(
     private fun getEmptyStringValidationResult(
         value: String,
         @StringRes errorId: Int
-    ): ValidationResult {
-        return if (value.isBlank()) {
+    ): ValidationResult =
+        if (value.isBlank()) {
             ValidationResult.Error(
                 UiText.StringResource(
                     resId = errorId
@@ -148,5 +173,4 @@ class RegisterViewModel @Inject constructor(
         } else {
             ValidationResult.Success
         }
-    }
 }
