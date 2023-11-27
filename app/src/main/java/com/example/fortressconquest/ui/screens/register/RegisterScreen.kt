@@ -3,14 +3,18 @@ package com.example.fortressconquest.ui.screens.register
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,15 +26,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fortressconquest.R
 import com.example.fortressconquest.common.showToast
 import com.example.fortressconquest.domain.model.Response
+import com.example.fortressconquest.ui.components.LoadingDialog
 import com.example.fortressconquest.ui.components.OutlinedInputFieldWithError
 import com.example.fortressconquest.ui.components.PasswordInputField
 import com.example.fortressconquest.ui.screens.register.components.ImageSelectDialog
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
     onNavigateToLoginScreen: () -> Unit,
@@ -41,7 +48,9 @@ fun RegisterScreen(
 ) {
     val formState by registerViewModel.registerFormState.collectAsStateWithLifecycle()
     val responseState by registerViewModel.registerResponseState.collectAsStateWithLifecycle()
+
     val context = LocalContext.current
+    val fieldWidth = TextFieldDefaults.MinWidth
 
     Column(
         modifier = modifier
@@ -70,7 +79,8 @@ fun RegisterScreen(
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Sentences,
                 imeAction = ImeAction.Next
-            )
+            ),
+            modifier = Modifier.width(fieldWidth)
         )
 
         OutlinedInputFieldWithError(
@@ -80,7 +90,8 @@ fun RegisterScreen(
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Sentences,
                 imeAction = ImeAction.Next
-            )
+            ),
+            modifier = Modifier.width(fieldWidth)
         )
 
         OutlinedInputFieldWithError(
@@ -90,7 +101,8 @@ fun RegisterScreen(
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Phone,
                 imeAction = ImeAction.Next
-            )
+            ),
+            modifier = Modifier.width(fieldWidth)
         )
 
         OutlinedInputFieldWithError(
@@ -100,7 +112,8 @@ fun RegisterScreen(
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next
-            )
+            ),
+            modifier = Modifier.width(fieldWidth)
         )
 
         PasswordInputField(
@@ -111,7 +124,8 @@ fun RegisterScreen(
             errorMessage = formState.password.error?.asString(),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done
-            )
+            ),
+            modifier = Modifier.width(fieldWidth)
         )
 
         Button(
@@ -137,6 +151,7 @@ fun RegisterScreen(
             onRegisterFailure(response.error)
             registerViewModel.resetError()
         }
+        is Response.Loading -> LoadingDialog()
         else -> Unit
     }
 }

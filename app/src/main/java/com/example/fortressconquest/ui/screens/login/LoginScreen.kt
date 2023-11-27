@@ -5,11 +5,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,11 +26,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fortressconquest.R
 import com.example.fortressconquest.domain.model.Response
+import com.example.fortressconquest.ui.components.LoadingDialog
 import com.example.fortressconquest.ui.components.OutlinedInputFieldWithError
 import com.example.fortressconquest.ui.components.PasswordInputField
 import com.example.fortressconquest.ui.components.SplashAppLogo
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     onNavigateToRegisterScreen: () -> Unit,
@@ -38,6 +43,8 @@ fun LoginScreen(
 ) {
     val formState by loginViewModel.loginFormState.collectAsStateWithLifecycle()
     val responseState by loginViewModel.loginResponseState.collectAsStateWithLifecycle()
+
+    val fieldWidth = TextFieldDefaults.MinWidth
 
     Column(
         modifier = modifier
@@ -58,7 +65,8 @@ fun LoginScreen(
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next
-            )
+            ),
+            modifier = Modifier.width(fieldWidth)
         )
 
         PasswordInputField(
@@ -68,7 +76,8 @@ fun LoginScreen(
             isPasswordVisible = formState.isPasswordVisible,
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done
-            )
+            ),
+            modifier = Modifier.width(fieldWidth)
         )
 
         Button(
@@ -86,6 +95,7 @@ fun LoginScreen(
         )
     }
 
+
     when (val response = responseState) {
         is Response.Success -> LaunchedEffect(responseState) {
             onLoginSuccess()
@@ -94,6 +104,7 @@ fun LoginScreen(
             onLoginFailure(response.error)
             loginViewModel.resetError()
         }
+        is Response.Loading -> LoadingDialog()
         else -> Unit
     }
 }

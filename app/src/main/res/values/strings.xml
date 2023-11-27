@@ -29,4 +29,6 @@
 
     <string name="button_take_picture">Take picture</string>
     <string name="button_select_picture">Select picture</string>
+    
+    <string name="loading">Loading...</string>
 </resources>

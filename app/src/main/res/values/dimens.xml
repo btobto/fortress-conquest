@@ -6,4 +6,6 @@
     <dimen name="image_size">64dp</dimen>
 
     <dimen name="pfp_size_register">150.dp</dimen>
+
+    <dimen name="loading_dialog_size">180.dp</dimen>
 </resources>
