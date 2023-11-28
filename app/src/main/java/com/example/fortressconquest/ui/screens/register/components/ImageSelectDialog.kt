@@ -47,7 +47,7 @@ fun ImageSelectDialog(
             fallback = placeholderImage,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .size(dimensionResource(id = R.dimen.pfp_size_register))
+                .size(dimensionResource(id = R.dimen.image_pfp_size))
                 .clip(CircleShape)
         )
 

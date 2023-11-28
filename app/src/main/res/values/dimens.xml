@@ -3,9 +3,14 @@
     <dimen name="padding_small">8dp</dimen>
     <dimen name="padding_medium">16dp</dimen>
     <dimen name="padding_large">32dp</dimen>
+
     <dimen name="image_size">64dp</dimen>
+    <dimen name="image_pfp_size">150dp</dimen>
 
-    <dimen name="pfp_size_register">150.dp</dimen>
+    <dimen name="loading_dialog_size">180dp</dimen>
 
-    <dimen name="loading_dialog_size">180.dp</dimen>
+    <dimen name="text_field_width">280dp</dimen>
+
+    <dimen name="dialog_character_width">50.dp</dimen>
+    <dimen name="dialog_character_min_height">400.dp</dimen>
 </resources>

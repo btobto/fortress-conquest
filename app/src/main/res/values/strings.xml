@@ -31,4 +31,7 @@
     <string name="button_select_picture">Select picture</string>
     
     <string name="loading">Loading...</string>
+    <string name="previous_entry">Previous entry</string>
+    <string name="next_entry">Next entry</string>
+    <string name="select">Select</string>
 </resources>

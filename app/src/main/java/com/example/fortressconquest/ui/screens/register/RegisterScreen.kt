@@ -42,7 +42,7 @@ import com.example.fortressconquest.ui.screens.register.components.ImageSelectDi
 fun RegisterScreen(
     onNavigateToLoginScreen: () -> Unit,
     onRegisterSuccess: () -> Unit,
-    onRegisterFailure: (String) -> Unit,
+    onRegisterFailure: suspend (String) -> Unit,
     registerViewModel: RegisterViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
@@ -50,7 +50,7 @@ fun RegisterScreen(
     val responseState by registerViewModel.registerResponseState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
-    val fieldWidth = TextFieldDefaults.MinWidth
+    val fieldWidth = dimensionResource(id = R.dimen.text_field_width)
 
     Column(
         modifier = modifier

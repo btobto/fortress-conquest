@@ -37,14 +37,14 @@ import com.example.fortressconquest.ui.components.SplashAppLogo
 fun LoginScreen(
     onNavigateToRegisterScreen: () -> Unit,
     onLoginSuccess: () -> Unit,
-    onLoginFailure: (String) -> Unit,
+    onLoginFailure: suspend (String) -> Unit,
     loginViewModel: LoginViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
     val formState by loginViewModel.loginFormState.collectAsStateWithLifecycle()
     val responseState by loginViewModel.loginResponseState.collectAsStateWithLifecycle()
 
-    val fieldWidth = TextFieldDefaults.MinWidth
+    val fieldWidth = dimensionResource(id = R.dimen.text_field_width)
 
     Column(
         modifier = modifier
