@@ -13,14 +13,15 @@ import com.example.fortressconquest.common.validatePassword
 import com.example.fortressconquest.common.validatePhoneNumber
 import com.example.fortressconquest.domain.model.RegistrationData
 import com.example.fortressconquest.domain.model.Response
-import com.example.fortressconquest.domain.repository.AuthRepository
+import com.example.fortressconquest.domain.usecase.RegisterUseCase
 import com.example.fortressconquest.ui.utils.FormField
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 data class RegisterFormState(
@@ -35,13 +36,13 @@ data class RegisterFormState(
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val registerUseCase: RegisterUseCase
 ): ViewModel() {
     private val _registerFormState = MutableStateFlow(RegisterFormState())
     val registerFormState = _registerFormState.asStateFlow()
 
-    private val _registerResponseState: MutableStateFlow<Response<Boolean>> = MutableStateFlow(Response.None)
-    val registerResponseState: StateFlow<Response<Boolean>> = _registerResponseState.asStateFlow()
+    private val _registerResponseState: MutableStateFlow<Response<Boolean, UiText>> = MutableStateFlow(Response.None)
+    val registerResponseState = _registerResponseState.asStateFlow()
 
     fun updateEmail(input: String) {
         _registerFormState.update { currentState ->
@@ -126,17 +127,26 @@ class RegisterViewModel @Inject constructor(
         viewModelScope.launch {
             _registerResponseState.update { Response.Loading }
 
-            val response = registerFormState.value.run {
-                authRepository.register(
-                    RegistrationData(
-                        email = email.value,
-                        password = password.value,
-                        firstName = firstName.value,
-                        lastName = lastName.value,
-                        phoneNumber = phoneNumber.value,
-                        imageUri = imageUri
+            val response = try {
+                 registerFormState.value.run {
+                    registerUseCase.invoke(
+                        RegistrationData(
+                            email = email.value,
+                            password = password.value,
+                            firstName = firstName.value,
+                            lastName = lastName.value,
+                            phoneNumber = phoneNumber.value,
+                            localPhotoUri = imageUri
+                        )
                     )
-                )
+                }
+                Response.Success(true)
+            } catch (e: FirebaseAuthUserCollisionException) {
+                Response.Error(UiText.StringResource(R.string.error_auth_account_already_exists))
+            } catch (e: IOException) {
+                Response.Error(UiText.StringResource(R.string.error_auth_offline))
+            } catch (e: Exception) {
+                Response.Error(UiText.StringResource(R.string.error_auth_generic))
             }
 
             _registerResponseState.update { response }

@@ -8,16 +8,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -32,7 +30,6 @@ import com.example.fortressconquest.ui.components.PasswordInputField
 import com.example.fortressconquest.ui.components.SplashAppLogo
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     onNavigateToRegisterScreen: () -> Unit,
@@ -45,6 +42,7 @@ fun LoginScreen(
     val responseState by loginViewModel.loginResponseState.collectAsStateWithLifecycle()
 
     val fieldWidth = dimensionResource(id = R.dimen.text_field_width)
+    val context = LocalContext.current
 
     Column(
         modifier = modifier
@@ -101,7 +99,7 @@ fun LoginScreen(
             onLoginSuccess()
         }
         is Response.Error -> LaunchedEffect(responseState) {
-            onLoginFailure(response.error)
+            onLoginFailure(response.error.asString(context))
             loginViewModel.resetError()
         }
         is Response.Loading -> LoadingDialog()

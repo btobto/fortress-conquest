@@ -2,6 +2,7 @@ package com.example.fortressconquest.ui.screens.home.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,15 +29,13 @@ fun PaginationSelectButtons(
     onNext: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier
-        .fillMaxWidth(0.6f)
+    Row(modifier = modifier
         .clip(RoundedCornerShape(100))
         .background(MaterialTheme.colorScheme.surfaceVariant)
         .padding(dimensionResource(id = R.dimen.padding_small))
     ) {
         IconButton(
-            onClick = onPrevious,
-            modifier = Modifier.align(Alignment.CenterStart)
+            onClick = onPrevious
         ) {
             Icon(
                 imageVector = Icons.Filled.KeyboardArrowLeft,
@@ -45,15 +44,13 @@ fun PaginationSelectButtons(
         }
 
         TextButton(
-            onClick = onSelected,
-            modifier = Modifier.align(Alignment.Center)
+            onClick = onSelected
         ) {
             Text(text = stringResource(id = R.string.select))
         }
 
         IconButton(
-            onClick = onNext,
-            modifier = Modifier.align(Alignment.CenterEnd)
+            onClick = onNext
         ) {
             Icon(
                 imageVector = Icons.Filled.KeyboardArrowRight,
