@@ -23,11 +23,9 @@ class RegisterUseCase @Inject constructor(
         val user = registrationData.run {
             User(
                 uid = authResponse.uid,
-                email = authResponse.email,
                 firstName = firstName,
                 lastName = lastName,
-                phoneNumber = phoneNumber,
-                photoUri = uploadedImageUri
+                photoUri = uploadedImageUri.toString()
             )
         }
 

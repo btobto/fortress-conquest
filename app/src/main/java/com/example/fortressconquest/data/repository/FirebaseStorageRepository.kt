@@ -1,6 +1,7 @@
 package com.example.fortressconquest.data.repository
 
 import android.net.Uri
+import com.example.fortressconquest.common.Constants
 import com.example.fortressconquest.domain.repository.StorageRepository
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -11,7 +12,7 @@ class FirebaseStorageRepository @Inject constructor(
     private val storage: FirebaseStorage
 ) : StorageRepository {
     private val storageRef = storage.reference
-    private val usersRef = storageRef.child("users")
+    private val usersRef = storageRef.child(Constants.USERS_STORAGE)
 
     private suspend fun uploadImage(
         uri: Uri,
@@ -25,6 +26,6 @@ class FirebaseStorageRepository @Inject constructor(
     }
 
     override suspend fun uploadUserImage(localUri: Uri, userId: String, filename: String?): Uri {
-        return uploadImage(localUri, usersRef.child("$userId"), filename)
+        return uploadImage(localUri, usersRef.child(userId), filename)
     }
 }

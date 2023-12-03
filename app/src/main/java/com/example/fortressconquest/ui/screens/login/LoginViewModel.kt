@@ -69,7 +69,7 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             _loginResponseState.update { Response.Loading }
 
-            val response = try {
+            val response: Response<Boolean, UiText> = try {
                 loginFormState.value.run {
                     authRepository.login(
                         email = email.value,
@@ -82,7 +82,7 @@ class LoginViewModel @Inject constructor(
             } catch (e: IOException) {
                 Response.Error(UiText.StringResource(R.string.error_auth_offline))
             } catch (e: Exception) {
-                Response.Error(UiText.StringResource(R.string.error_auth_generic))
+                Response.Error(UiText.StringResource(R.string.error_generic))
             }
 
             _loginResponseState.update { response }

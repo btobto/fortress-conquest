@@ -1,7 +1,7 @@
 package com.example.fortressconquest.domain.model
 
-sealed interface AuthState {
-    object Loading: AuthState
-    object LoggedIn: AuthState
-    object NotLoggedIn: AuthState
+sealed interface AuthState<out T> {
+    object Loading: AuthState<Nothing>
+    data class LoggedIn<out T>(val data: T): AuthState<T>
+    object NotLoggedIn: AuthState<Nothing>
 }

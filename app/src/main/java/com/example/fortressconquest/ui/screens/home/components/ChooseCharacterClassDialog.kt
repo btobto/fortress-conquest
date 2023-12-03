@@ -1,6 +1,7 @@
 package com.example.fortressconquest.ui.screens.home.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,18 +23,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.fortressconquest.R
+import com.example.fortressconquest.domain.model.CharacterClass
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ChooseCharacterClassDialog(
-    characterClasses: List<Int>,
-    onSelected: () -> Unit,
+    characterClasses: List<CharacterClass>,
+    onSelected: (CharacterClass) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scope = rememberCoroutineScope()
@@ -64,6 +66,7 @@ fun ChooseCharacterClassDialog(
                 contentPadding = PaddingValues(horizontal = dimensionResource(id = R.dimen.dialog_character_width)),
             ) { index ->
                 val correctPage = calculatePage(index, startIndex, correctPageCount)
+                val character = characterClasses[correctPage]
 
                 Column(
                     modifier = Modifier
@@ -76,11 +79,12 @@ fun ChooseCharacterClassDialog(
                         .padding(dimensionResource(id = R.dimen.padding_medium))
                 ) {
                     Text(
-                        text = stringResource(id = R.string.choose_character),
+                        text = character.name.replaceFirstChar(Char::titlecase),
                         style = MaterialTheme.typography.titleLarge
                     )
-                    Text(
-                        text = characterClasses[correctPage].toString()
+                    Image(
+                        painter = painterResource(id = getCharacterImageId(character.name)!!),
+                        contentDescription = null
                     )
                 }
             }
@@ -89,7 +93,8 @@ fun ChooseCharacterClassDialog(
 
             PaginationSelectButtons(
                 onSelected = {
-                    onSelected()
+                    val index = calculatePage(pagerState.currentPage, startIndex, correctPageCount)
+                    onSelected(characterClasses[index])
                 },
                 onPrevious = {
                     scope.launch {
@@ -107,14 +112,6 @@ fun ChooseCharacterClassDialog(
     }
 }
 
-@Composable
-private fun DialogContent(
-    characterClass: Int,
-    modifier: Modifier = Modifier
-) {
-
-}
-
 private fun calculatePage(
     index: Int,
     startIndex: Int,
@@ -125,5 +122,14 @@ private fun calculatePage(
             0 -> it
             else -> it - it.floorDiv(pageCount) * pageCount
         }
+    }
+}
+
+private fun getCharacterImageId(name: String): Int? {
+    return when (name) {
+        "knight" -> R.drawable.knight_500
+        "assassin" -> R.drawable.assassin_500
+        "barbarian" -> R.drawable.barbarian_500
+        else -> null
     }
 }

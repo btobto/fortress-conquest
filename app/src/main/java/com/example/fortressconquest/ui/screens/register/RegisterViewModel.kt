@@ -127,7 +127,7 @@ class RegisterViewModel @Inject constructor(
         viewModelScope.launch {
             _registerResponseState.update { Response.Loading }
 
-            val response = try {
+            val response: Response<Boolean, UiText> = try {
                  registerFormState.value.run {
                     registerUseCase.invoke(
                         RegistrationData(
@@ -146,7 +146,7 @@ class RegisterViewModel @Inject constructor(
             } catch (e: IOException) {
                 Response.Error(UiText.StringResource(R.string.error_auth_offline))
             } catch (e: Exception) {
-                Response.Error(UiText.StringResource(R.string.error_auth_generic))
+                Response.Error(UiText.StringResource(R.string.error_generic))
             }
 
             _registerResponseState.update { response }

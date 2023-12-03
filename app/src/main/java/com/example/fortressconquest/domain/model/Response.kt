@@ -5,11 +5,11 @@ sealed class Response<out T, out R> {
 
     object Loading: Response<Nothing, Nothing>()
 
-    data class Success<out T>(
+    data class Success<out T, out R>(
         val data: T
-    ): Response<T, Nothing>()
+    ): Response<T, R>()
 
-    data class Error<out R>(
+    data class Error<out T, out R>(
         val error: R
-    ): Response<Nothing, R>()
+    ): Response<T, R>()
 }
