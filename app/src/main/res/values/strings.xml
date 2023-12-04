@@ -36,4 +36,10 @@
     <string name="next_entry">Next entry</string>
     <string name="select">Select</string>
     <string name="choose_character">Choose your character</string>
+
+    <string name="damage">Damage</string>
+    <string name="armor">Armor</string>
+    <string name="health">Health</string>
+    <string name="accuracy">Accuracy</string>
+    <string name="crit_chance">Critical chance</string>
 </resources>
