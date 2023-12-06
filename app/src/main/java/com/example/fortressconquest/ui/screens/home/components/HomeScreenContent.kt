@@ -8,15 +8,7 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun HomeScreenContent(
-    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-    ) {
 
-        Button(onClick = onClick) {
-            Text(text = "log out")
-        }
-    }
 }

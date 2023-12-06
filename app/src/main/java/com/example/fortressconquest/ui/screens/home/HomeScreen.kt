@@ -12,17 +12,12 @@ import com.example.fortressconquest.ui.screens.home.components.HomeScreenContent
 
 @Composable
 fun HomeScreen(
-    onLogout: () -> Unit,
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val dialogState by homeViewModel.characterDialogState.collectAsStateWithLifecycle()
 
     HomeScreenContent(
-        onClick = {
-            homeViewModel.logout()
-            onLogout()
-        },
         modifier = modifier
     )
 

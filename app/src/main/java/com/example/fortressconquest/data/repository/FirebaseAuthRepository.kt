@@ -27,7 +27,7 @@ class FirebaseAuthRepository @Inject constructor(
         awaitClose {
             auth.removeAuthStateListener(authStateListener)
         }
-    }.stateIn(externalScope, SharingStarted.WhileSubscribed(), AuthState.Loading)
+    }.stateIn(externalScope, SharingStarted.Eagerly, AuthState.Loading)
 
     override suspend fun register(email: String, password: String): AuthResponse {
         auth.createUserWithEmailAndPassword(email, password).await()

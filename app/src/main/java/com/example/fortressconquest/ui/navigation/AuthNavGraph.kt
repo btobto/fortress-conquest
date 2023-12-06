@@ -8,7 +8,7 @@ import com.example.fortressconquest.ui.screens.login.LoginScreen
 import com.example.fortressconquest.ui.screens.register.RegisterScreen
 import com.example.fortressconquest.ui.utils.GraphDestination
 
-private sealed class AuthDestination(val route: String) {
+sealed class AuthDestination(val route: String) {
     object Login: AuthDestination("login")
     object Register: AuthDestination("register")
 }
@@ -27,7 +27,7 @@ fun NavGraphBuilder.authGraph(
                     navController.navigate(AuthDestination.Register.route)
                 },
                 onLoginSuccess = {
-                    navController.navigateAndClearBackStack(GraphDestination.Home.route)
+                    navController.navigateAndClearBackStack(GraphDestination.Main.route)
                 },
                 onLoginFailure = { error -> onShowSnackbar(error, null) }
             )
@@ -39,7 +39,7 @@ fun NavGraphBuilder.authGraph(
                     navController.navigateAndClearBackStack(AuthDestination.Login.route)
                 },
                 onRegisterSuccess = {
-                    navController.navigateAndClearBackStack(GraphDestination.Home.route)
+                    navController.navigateAndClearBackStack(GraphDestination.Main.route)
                 },
                 onRegisterFailure = { error -> onShowSnackbar(error, null) }
             )

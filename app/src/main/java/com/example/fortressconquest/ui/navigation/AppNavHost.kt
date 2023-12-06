@@ -5,7 +5,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.fortressconquest.ui.screens.home.HomeScreen
 import com.example.fortressconquest.ui.screens.splash.SplashScreen
 import com.example.fortressconquest.ui.utils.GraphDestination
 
@@ -26,20 +25,14 @@ fun AppNavHost(
                     navController.navigateAndClearBackStack(GraphDestination.Auth.route)
                 },
                 onNavigateToHome = {
-                    navController.navigateAndClearBackStack(GraphDestination.Home.route)
+                    navController.navigateAndClearBackStack(GraphDestination.Main.route)
                 }
             )
         }
 
         authGraph(navController, onShowSnackbar)
 
-        composable(route = GraphDestination.Home.route) {
-            HomeScreen(
-                onLogout = {
-                    navController.navigateAndClearBackStack(GraphDestination.Auth.route)
-                }
-            )
-        }
+        mainGraph(navController)
     }
 }
 

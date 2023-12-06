@@ -1,5 +1,6 @@
 package com.example.fortressconquest.data.repository
 
+import com.example.fortressconquest.common.Constants
 import com.example.fortressconquest.domain.model.CharacterClass
 import com.example.fortressconquest.domain.model.User
 import com.example.fortressconquest.domain.repository.UsersRepository
@@ -27,7 +28,7 @@ class FirestoreUsersRepository @Inject constructor(
     }
 
     override suspend fun setUserCharacterClass(user: User, character: CharacterClass) {
-        usersRef.document(user.uid).update("character", character).await()
+        usersRef.document(user.uid).update(Constants.USER_CHARACTER_FIELD, character).await()
     }
 
     override fun getUserFlow(uid: String): Flow<User?> {

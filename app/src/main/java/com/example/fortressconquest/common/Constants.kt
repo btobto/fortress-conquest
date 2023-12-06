@@ -5,6 +5,7 @@ object Constants {
 
     const val USERS_COLLECTION = "users"
     const val CHARACTER_CLASSES_COLLECTION = "characterClasses"
+    const val USER_CHARACTER_FIELD = "character"
 
     const val USERS_STORAGE = "users"
 }
