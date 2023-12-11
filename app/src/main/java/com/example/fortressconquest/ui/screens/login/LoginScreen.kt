@@ -29,14 +29,13 @@ import com.example.fortressconquest.ui.components.OutlinedInputFieldWithError
 import com.example.fortressconquest.ui.components.PasswordInputField
 import com.example.fortressconquest.ui.components.SplashAppLogo
 
-
 @Composable
 fun LoginScreen(
     onNavigateToRegisterScreen: () -> Unit,
     onLoginSuccess: () -> Unit,
     onLoginFailure: suspend (String) -> Unit,
+    modifier: Modifier = Modifier,
     loginViewModel: LoginViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
 ) {
     val formState by loginViewModel.loginFormState.collectAsStateWithLifecycle()
     val responseState by loginViewModel.loginResponseState.collectAsStateWithLifecycle()

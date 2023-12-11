@@ -1,17 +1,13 @@
-package com.example.fortressconquest.ui.navigation
+package com.example.fortressconquest.ui.navigation.auth
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.example.fortressconquest.ui.navigation.navigateAndClearBackStack
 import com.example.fortressconquest.ui.screens.login.LoginScreen
 import com.example.fortressconquest.ui.screens.register.RegisterScreen
-import com.example.fortressconquest.ui.utils.GraphDestination
-
-sealed class AuthDestination(val route: String) {
-    object Login: AuthDestination("login")
-    object Register: AuthDestination("register")
-}
+import com.example.fortressconquest.ui.navigation.GraphDestination
 
 fun NavGraphBuilder.authGraph(
     navController: NavHostController,
@@ -27,7 +23,9 @@ fun NavGraphBuilder.authGraph(
                     navController.navigate(AuthDestination.Register.route)
                 },
                 onLoginSuccess = {
-                    navController.navigateAndClearBackStack(GraphDestination.Main.route)
+                    navController.navigateAndClearBackStack(
+                        GraphDestination.Main.getRouteWithArg(checkCharacter = true)
+                    )
                 },
                 onLoginFailure = { error -> onShowSnackbar(error, null) }
             )
@@ -39,7 +37,9 @@ fun NavGraphBuilder.authGraph(
                     navController.navigateAndClearBackStack(AuthDestination.Login.route)
                 },
                 onRegisterSuccess = {
-                    navController.navigateAndClearBackStack(GraphDestination.Main.route)
+                    navController.navigateAndClearBackStack(
+                        GraphDestination.Main.getRouteWithArg(checkCharacter = true)
+                    )
                 },
                 onRegisterFailure = { error -> onShowSnackbar(error, null) }
             )

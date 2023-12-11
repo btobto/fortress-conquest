@@ -6,6 +6,8 @@ plugins {
     id("com.google.dagger.hilt.android")
 
     id("com.google.gms.google-services")
+
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -88,8 +90,14 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
 
     implementation("io.coil-kt:coil-compose:2.5.0")
+
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
 }
 
 kapt {
     correctErrorTypes = true
+}
+
+secrets {
+    propertiesFileName = "secrets.properties"
 }

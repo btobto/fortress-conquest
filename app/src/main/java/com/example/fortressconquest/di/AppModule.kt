@@ -1,6 +1,5 @@
 package com.example.fortressconquest.di
 
-import android.util.Log
 import com.example.fortressconquest.common.Constants
 import com.example.fortressconquest.data.repository.FirebaseAuthRepository
 import com.example.fortressconquest.data.repository.FirebaseStorageRepository
@@ -18,7 +17,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -40,9 +38,7 @@ class AppModule {
     @Provides
     @Singleton
     fun provideSingletonScope(): CoroutineScope =
-        CoroutineScope(SupervisorJob() + Dispatchers.Main + CoroutineExceptionHandler { _, e ->
-            Log.e("singleton", "error: $e")}
-        )
+        CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     @UsersCollectionReference
     @Provides

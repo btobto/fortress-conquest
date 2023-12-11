@@ -10,7 +10,7 @@ import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.fortressconquest.R
-import com.example.fortressconquest.ui.navigation.MainDestination
+import com.example.fortressconquest.ui.navigation.main.MainDestination
 
 sealed class BottomBarDestination(
     val route: String,

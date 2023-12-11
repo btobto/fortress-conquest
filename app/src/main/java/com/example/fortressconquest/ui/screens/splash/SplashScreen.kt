@@ -22,14 +22,14 @@ import com.example.fortressconquest.ui.components.SplashAppLogo
 
 @Composable
 fun SplashScreen(
-    splashViewModel: SplashViewModel = hiltViewModel(),
     onNavigateToAuth: () -> Unit,
-    onNavigateToHome: () -> Unit,
-    modifier: Modifier = Modifier
+    onNavigateToApp: () -> Unit,
+    modifier: Modifier = Modifier,
+    splashViewModel: SplashViewModel = hiltViewModel()
 ) {
     when (val state = splashViewModel.authState.collectAsStateWithLifecycle().value) {
         is AuthState.LoggedIn -> LaunchedEffect(state) {
-            onNavigateToHome()
+            onNavigateToApp()
         }
         is AuthState.NotLoggedIn -> LaunchedEffect(state) {
             onNavigateToAuth()
