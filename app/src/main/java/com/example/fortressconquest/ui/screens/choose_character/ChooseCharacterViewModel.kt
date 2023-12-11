@@ -1,5 +1,6 @@
 package com.example.fortressconquest.ui.screens.choose_character
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,8 +13,11 @@ import com.example.fortressconquest.ui.navigation.GraphDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+private const val TAG = "CharSelectVM"
 
 @HiltViewModel
 class ChooseCharacterViewModel @Inject constructor(
@@ -21,10 +25,20 @@ class ChooseCharacterViewModel @Inject constructor(
     private val usersRepository: UsersRepository,
     private val getCurrentUserUseCase: GetCurrentUserUseCase
 ): ViewModel() {
+
     private val checkIfHasCharacter: Boolean =
         savedStateHandle[GraphDestination.Main.CHECK_CHARACTER_ARG_NAME] ?: false
+
     val characterDialogState: Flow<Response<List<CharacterClass>?, String>> =
         getCurrentUserUseCase()
+            .onEach { state ->
+                val msg = when (state) {
+                    is AuthState.LoggedIn -> "Logged in"
+                    is AuthState.Loading -> "Loading"
+                    is AuthState.NotLoggedIn -> "Not logged in"
+                }
+                Log.i(TAG, msg)
+            }
             .map { state ->
                 if (!checkIfHasCharacter) {
                     return@map Response.Success(emptyList())
