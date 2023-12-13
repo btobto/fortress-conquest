@@ -1,4 +1,4 @@
-package com.example.fortressconquest.ui.screens.home.components
+package com.example.fortressconquest.ui.screens.character_select.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

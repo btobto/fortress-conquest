@@ -18,16 +18,23 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.math.pow
 
 private const val TAG = "CurrUserUC"
 
+@Singleton
 @OptIn(ExperimentalCoroutinesApi::class)
 class GetCurrentUserUseCase @Inject constructor(
     externalScope: CoroutineScope,
     authRepository: AuthRepository,
     private val usersRepository: UsersRepository
 ) {
+    private companion object {
+        const val STARTING_DELAY_MS = 1000
+        const val DELAY_FACTOR = 2.0
+    }
+
     private val userFlow = authRepository.authState
         .flatMapLatest { state ->
             when(state) {
@@ -37,7 +44,7 @@ class GetCurrentUserUseCase @Inject constructor(
                         .retryWhen { _, attempt ->
                             if (attempt > 3) return@retryWhen false
 
-                            val delayMs = 1000 * 2.0.pow(attempt.toInt()).toLong()
+                            val delayMs = STARTING_DELAY_MS * DELAY_FACTOR.pow(attempt.toInt()).toLong()
                             Log.i(TAG, "Retrying to get user, attempt: $attempt, delay: $delayMs")
                             delay(delayMs)
 
@@ -55,7 +62,7 @@ class GetCurrentUserUseCase @Inject constructor(
                 is AuthState.NotLoggedIn -> flowOf(AuthState.NotLoggedIn)
             }
         }
-        .stateIn(externalScope, SharingStarted.WhileSubscribed(), AuthState.Loading)
+        .stateIn(externalScope, SharingStarted.Lazily, AuthState.Loading)
 
     operator fun invoke(): StateFlow<AuthState<User>> = userFlow
 }

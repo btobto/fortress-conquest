@@ -1,12 +1,13 @@
 package com.example.fortressconquest.ui.components
 
+import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Image
+import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -15,8 +16,6 @@ import androidx.core.content.FileProvider
 import com.example.fortressconquest.BuildConfig
 import com.example.fortressconquest.R
 import java.io.File
-import android.Manifest
-import androidx.compose.material.icons.outlined.PhotoCamera
 
 @Composable
 fun TakeImageButton(

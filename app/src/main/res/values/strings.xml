@@ -46,4 +46,7 @@
     <string name="map">Map</string>
     <string name="leaderboard">Leaderboard</string>
     <string name="profile">Profile</string>
+    <string name="error_loc_unavailable">Location unavailable.</string>
+    <string name="error_loc_generic">Error getting location.</string>
+    <string name="error_loc_cancelled">Location fetching cancelled.</string>
 </resources>

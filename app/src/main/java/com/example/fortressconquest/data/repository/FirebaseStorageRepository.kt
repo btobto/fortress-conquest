@@ -9,23 +9,24 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class FirebaseStorageRepository @Inject constructor(
-    private val storage: FirebaseStorage
+    storage: FirebaseStorage
 ) : StorageRepository {
     private val storageRef = storage.reference
     private val usersRef = storageRef.child(Constants.USERS_STORAGE)
 
     private suspend fun uploadImage(
-        uri: Uri,
+        localUri: String,
         folderReference: StorageReference,
         filename: String? = null
-    ): Uri {
-        val imageReference = folderReference.child(filename ?: "${uri.lastPathSegment}")
-        imageReference.putFile(uri).await()
+    ): String {
+        val imageUri = Uri.parse(localUri)
+        val imageReference = folderReference.child(filename ?: "${imageUri.lastPathSegment}")
+        imageReference.putFile(imageUri).await()
 
-        return imageReference.downloadUrl.await()
+        return imageReference.downloadUrl.await().toString()
     }
 
-    override suspend fun uploadUserImage(localUri: Uri, userId: String, filename: String?): Uri {
+    override suspend fun uploadUserImage(localUri: String, userId: String, filename: String?): String {
         return uploadImage(localUri, usersRef.child(userId), filename)
     }
 }

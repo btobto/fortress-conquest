@@ -136,7 +136,7 @@ class RegisterViewModel @Inject constructor(
                             firstName = firstName.value,
                             lastName = lastName.value,
                             phoneNumber = phoneNumber.value,
-                            localPhotoUri = imageUri
+                            localPhotoUri = imageUri.toString()
                         )
                     )
                 }

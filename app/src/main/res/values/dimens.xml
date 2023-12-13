@@ -13,4 +13,6 @@
 
     <dimen name="dialog_character_width">50dp</dimen>
     <dimen name="dialog_character_min_height">400dp</dimen>
+
+    <dimen name="border_width">8dp</dimen>
 </resources>

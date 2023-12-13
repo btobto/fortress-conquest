@@ -15,8 +15,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.fortressconquest.ui.components.BottomNavigationBar
 import com.example.fortressconquest.ui.navigation.AppNavHost
-import com.example.fortressconquest.ui.utils.bottomBarDestinations
 import com.example.fortressconquest.ui.theme.FortressConquestTheme
+import com.example.fortressconquest.ui.utils.bottomBarDestinations
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

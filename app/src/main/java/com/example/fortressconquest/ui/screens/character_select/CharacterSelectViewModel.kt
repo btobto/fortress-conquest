@@ -1,9 +1,11 @@
-package com.example.fortressconquest.ui.screens.choose_character
+package com.example.fortressconquest.ui.screens.character_select
 
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.fortressconquest.R
+import com.example.fortressconquest.common.model.UiText
 import com.example.fortressconquest.domain.model.AuthState
 import com.example.fortressconquest.domain.model.CharacterClass
 import com.example.fortressconquest.domain.model.Response
@@ -20,7 +22,7 @@ import javax.inject.Inject
 private const val TAG = "CharSelectVM"
 
 @HiltViewModel
-class ChooseCharacterViewModel @Inject constructor(
+class CharacterSelectViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val usersRepository: UsersRepository,
     private val getCurrentUserUseCase: GetCurrentUserUseCase
@@ -29,7 +31,7 @@ class ChooseCharacterViewModel @Inject constructor(
     private val checkIfHasCharacter: Boolean =
         savedStateHandle[GraphDestination.Main.CHECK_CHARACTER_ARG_NAME] ?: false
 
-    val characterDialogState: Flow<Response<List<CharacterClass>?, String>> =
+    val characterDialogState: Flow<Response<List<CharacterClass>, UiText>> =
         getCurrentUserUseCase()
             .onEach { state ->
                 val msg = when (state) {
@@ -45,13 +47,11 @@ class ChooseCharacterViewModel @Inject constructor(
                 }
 
                 when (state) {
-                    is AuthState.LoggedIn ->
-                        if (state.data.character == null)
-                            Response.Success(usersRepository.getAllCharacterClasses())
-                        else
-                            Response.Success(emptyList())
+                    is AuthState.LoggedIn -> Response.Success(
+                    state.data.character?.let { usersRepository.getAllCharacterClasses() } ?: emptyList()
+                    )
                     is AuthState.Loading -> Response.Loading
-                    else -> Response.Success(null)
+                    else -> Response.Error(UiText.StringResource(resId = R.string.error_generic))
                 }
             }
 

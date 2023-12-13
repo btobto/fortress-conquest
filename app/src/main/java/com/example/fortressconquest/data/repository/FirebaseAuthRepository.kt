@@ -5,20 +5,16 @@ import com.example.fortressconquest.domain.model.AuthState
 import com.example.fortressconquest.domain.repository.AuthRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class FirebaseAuthRepository @Inject constructor(
-    private val externalScope: CoroutineScope,
     private val auth: FirebaseAuth,
 ) : AuthRepository {
-    override val authState: StateFlow<AuthState<AuthResponse>> = callbackFlow {
+    override val authState: Flow<AuthState<AuthResponse>> = callbackFlow {
         val authStateListener = FirebaseAuth.AuthStateListener { auth ->
             val state = auth.currentUser?.let { AuthState.LoggedIn(it.toAuthResponse()) } ?: AuthState.NotLoggedIn
             trySend(state)
@@ -27,7 +23,7 @@ class FirebaseAuthRepository @Inject constructor(
         awaitClose {
             auth.removeAuthStateListener(authStateListener)
         }
-    }.stateIn(externalScope, SharingStarted.Eagerly, AuthState.Loading)
+    }
 
     override suspend fun register(email: String, password: String): AuthResponse {
         auth.createUserWithEmailAndPassword(email, password).await()

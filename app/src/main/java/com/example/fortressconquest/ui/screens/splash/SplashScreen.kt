@@ -27,7 +27,7 @@ fun SplashScreen(
     modifier: Modifier = Modifier,
     splashViewModel: SplashViewModel = hiltViewModel()
 ) {
-    when (val state = splashViewModel.authState.collectAsStateWithLifecycle().value) {
+    when (val state = splashViewModel.authState.collectAsStateWithLifecycle(AuthState.Loading).value) {
         is AuthState.LoggedIn -> LaunchedEffect(state) {
             onNavigateToApp()
         }

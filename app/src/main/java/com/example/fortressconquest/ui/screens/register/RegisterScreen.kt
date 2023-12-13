@@ -10,7 +10,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,8 +38,8 @@ fun RegisterScreen(
     onNavigateToLoginScreen: () -> Unit,
     onRegisterSuccess: () -> Unit,
     onRegisterFailure: suspend (String) -> Unit,
+    modifier: Modifier = Modifier,
     registerViewModel: RegisterViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
 ) {
     val formState by registerViewModel.registerFormState.collectAsStateWithLifecycle()
     val responseState by registerViewModel.registerResponseState.collectAsStateWithLifecycle()

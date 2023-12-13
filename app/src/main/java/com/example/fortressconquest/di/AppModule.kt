@@ -1,24 +1,24 @@
 package com.example.fortressconquest.di
 
+import android.content.Context
 import com.example.fortressconquest.common.Constants
 import com.example.fortressconquest.data.repository.FirebaseAuthRepository
-import com.example.fortressconquest.data.repository.FirebaseStorageRepository
 import com.example.fortressconquest.data.repository.FirestoreUsersRepository
 import com.example.fortressconquest.domain.repository.AuthRepository
-import com.example.fortressconquest.domain.repository.StorageRepository
 import com.example.fortressconquest.domain.repository.UsersRepository
-import com.example.fortressconquest.domain.usecase.GetCurrentUserUseCase
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.firestore
-import com.google.firebase.storage.storage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import javax.inject.Qualifier
 import javax.inject.Singleton
@@ -33,12 +33,21 @@ annotation class CharacterClassesCollectionReference
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AppModule {
+object AppModule {
 
     @Provides
     @Singleton
-    fun provideSingletonScope(): CoroutineScope =
-        CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    fun provideSingletonScope(
+        @MainDispatcher dispatcher: CoroutineDispatcher
+    ): CoroutineScope =
+        CoroutineScope(SupervisorJob() + dispatcher)
+
+    @Provides
+    @Singleton
+    fun provideFusedLocationProviderClient(
+        @ApplicationContext context: Context
+    ): FusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(context)
 
     @UsersCollectionReference
     @Provides
@@ -51,37 +60,18 @@ class AppModule {
         Firebase.firestore.collection(Constants.CHARACTER_CLASSES_COLLECTION)
 
     @Provides
-    @Singleton
-    fun provideGetCurrentUserUseCase(
-        scope: CoroutineScope,
-        authRepository: AuthRepository,
-        usersRepository: UsersRepository
-    ): GetCurrentUserUseCase =
-        GetCurrentUserUseCase(
-            externalScope = scope,
-            authRepository = authRepository,
-            usersRepository = usersRepository
+    fun provideAuthRepository(): AuthRepository =
+        FirebaseAuthRepository(
+            Firebase.auth
         )
 
     @Provides
     fun provideUsersRepository(
         @UsersCollectionReference usersRef: CollectionReference,
-        @CharacterClassesCollectionReference classesRef: CollectionReference
+        @CharacterClassesCollectionReference characterClassesRef: CollectionReference
     ): UsersRepository =
-        FirestoreUsersRepository(usersRef, classesRef)
-
-    @Provides
-    @Singleton
-    fun provideAuthRepository(
-        scope: CoroutineScope
-    ): AuthRepository =
-        FirebaseAuthRepository(
-            scope,
-            Firebase.auth
+        FirestoreUsersRepository(
+            usersRef,
+            characterClassesRef
         )
-
-    @Provides
-    @Singleton
-    fun provideStorageRepository(): StorageRepository =
-        FirebaseStorageRepository(Firebase.storage)
 }

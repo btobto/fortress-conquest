@@ -4,10 +4,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.example.fortressconquest.ui.navigation.GraphDestination
 import com.example.fortressconquest.ui.navigation.navigateAndClearBackStack
 import com.example.fortressconquest.ui.screens.login.LoginScreen
 import com.example.fortressconquest.ui.screens.register.RegisterScreen
-import com.example.fortressconquest.ui.navigation.GraphDestination
 
 fun NavGraphBuilder.authGraph(
     navController: NavHostController,

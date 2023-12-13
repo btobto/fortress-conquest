@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    authRepository: AuthRepository
 ): ViewModel() {
     val authState = authRepository.authState
 }

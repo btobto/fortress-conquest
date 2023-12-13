@@ -9,7 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import com.example.fortressconquest.ui.utils.FormField
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -18,8 +17,8 @@ fun OutlinedInputFieldWithError(
     field: FormField,
     onValueChange: (String) -> Unit,
     @StringRes label: Int,
+    modifier: Modifier = Modifier,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
         OutlinedTextField(

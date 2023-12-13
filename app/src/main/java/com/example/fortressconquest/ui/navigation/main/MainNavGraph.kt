@@ -5,12 +5,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.example.fortressconquest.ui.navigation.navigateAndClearBackStack
-import com.example.fortressconquest.ui.screens.home.HomeScreen
-import com.example.fortressconquest.ui.screens.leaderboard.LeaderboardScreen
-import com.example.fortressconquest.ui.screens.profile.ProfileScreen
 import com.example.fortressconquest.ui.navigation.GraphDestination
-import com.example.fortressconquest.ui.screens.choose_character.ChooseCharacterScreen
+import com.example.fortressconquest.ui.navigation.navigateAndClearBackStack
+import com.example.fortressconquest.ui.screens.character_select.CharacterSelectScreen
+import com.example.fortressconquest.ui.screens.leaderboard.LeaderboardScreen
+import com.example.fortressconquest.ui.screens.map.MapScreen
+import com.example.fortressconquest.ui.screens.profile.ProfileScreen
 
 fun NavGraphBuilder.mainGraph(
     navController: NavHostController
@@ -21,7 +21,7 @@ fun NavGraphBuilder.mainGraph(
         arguments = GraphDestination.Main.arguments
     ) {
         composable(route = MainDestination.ChooseCharacter.route) {
-            ChooseCharacterScreen(
+            CharacterSelectScreen(
                 onSelectedCharacter = {
                     navController.navigate(MainDestination.Map.route) {
                         popUpTo(navController.graph.findStartDestination().id)
@@ -31,7 +31,7 @@ fun NavGraphBuilder.mainGraph(
         }
 
         composable(route = MainDestination.Map.route) {
-            HomeScreen()
+            MapScreen()
         }
 
         composable(route = MainDestination.Leaderboard.route) {

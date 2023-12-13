@@ -1,6 +1,8 @@
 package com.example.fortressconquest.data.repository
 
 import com.example.fortressconquest.common.Constants
+import com.example.fortressconquest.di.CharacterClassesCollectionReference
+import com.example.fortressconquest.di.UsersCollectionReference
 import com.example.fortressconquest.domain.model.CharacterClass
 import com.example.fortressconquest.domain.model.User
 import com.example.fortressconquest.domain.repository.UsersRepository
@@ -12,8 +14,8 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class FirestoreUsersRepository @Inject constructor(
-    private val usersRef: CollectionReference,
-    private val characterClassesRef: CollectionReference
+    @UsersCollectionReference private val usersRef: CollectionReference,
+    @CharacterClassesCollectionReference private val characterClassesRef: CollectionReference
 ): UsersRepository {
     override suspend fun getAllCharacterClasses(): List<CharacterClass> {
         return characterClassesRef.get().await().toObjects(CharacterClass::class.java)
