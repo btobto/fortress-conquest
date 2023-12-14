@@ -15,7 +15,7 @@ import com.example.fortressconquest.ui.screens.character_select.components.Chara
 
 @Composable
 fun CharacterSelectScreen(
-    onSelectedCharacter: () -> Unit,
+    onNavigateToApp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CharacterSelectViewModel = hiltViewModel()
 ) {
@@ -29,13 +29,13 @@ fun CharacterSelectScreen(
             is Response.Success -> {
                 when {
                     targetState.data.isEmpty() -> LaunchedEffect(targetState) {
-                        onSelectedCharacter()
+                        onNavigateToApp()
                     }
                     else -> CharacterSelectContent(
                         characterClasses = targetState.data,
                         onSelectedCharacter = { character ->
                             viewModel.selectCharacterClass(character)
-                            onSelectedCharacter()
+                            onNavigateToApp()
                         },
                         modifier = modifier
                             .background(color = MaterialTheme.colorScheme.surfaceVariant)

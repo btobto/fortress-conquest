@@ -49,4 +49,5 @@
     <string name="error_loc_unavailable">Location unavailable.</string>
     <string name="error_loc_generic">Error getting location.</string>
     <string name="error_loc_cancelled">Location fetching cancelled.</string>
+    <string name="error_loc_perms_denied">Location permissions denied.</string>
 </resources>

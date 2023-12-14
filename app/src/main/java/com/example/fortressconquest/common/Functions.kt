@@ -1,9 +1,11 @@
 package com.example.fortressconquest.common
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.util.Patterns
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import com.example.fortressconquest.R
 import com.example.fortressconquest.common.model.UiText
 import com.example.fortressconquest.common.model.ValidationResult
@@ -76,4 +78,8 @@ fun showToast(context: Context, @StringRes messageId: Int) {
         ).asString(context),
         Toast.LENGTH_SHORT
     ).show()
+}
+
+fun checkPermissions(context: Context, permissions: Array<String>): Boolean {
+    return permissions.all { ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED }
 }

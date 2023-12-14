@@ -6,7 +6,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.fortressconquest.ui.navigation.auth.authGraph
+import com.example.fortressconquest.ui.navigation.main.MainDestination
 import com.example.fortressconquest.ui.navigation.main.mainGraph
+import com.example.fortressconquest.ui.screens.character_select.CharacterSelectScreen
 import com.example.fortressconquest.ui.screens.splash.SplashScreen
 
 @Composable
@@ -27,7 +29,7 @@ fun AppNavHost(
                 },
                 onNavigateToApp = {
                     navController.navigateAndClearBackStack(
-                        GraphDestination.Main.getRouteWithArg(checkCharacter = true)
+                        GraphDestination.CharacterSelect.route
                     )
                 }
             )
@@ -35,7 +37,17 @@ fun AppNavHost(
 
         authGraph(navController, onShowSnackbar)
 
-        mainGraph(navController)
+        composable(route = GraphDestination.CharacterSelect.route) {
+            CharacterSelectScreen(
+                onNavigateToApp = {
+                    navController.navigateAndClearBackStack(
+                        MainDestination.Map.route
+                    )
+                }
+            )
+        }
+
+        mainGraph(navController, onShowSnackbar)
     }
 }
 

@@ -23,13 +23,9 @@ private const val TAG = "CharSelectVM"
 
 @HiltViewModel
 class CharacterSelectViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     private val usersRepository: UsersRepository,
     private val getCurrentUserUseCase: GetCurrentUserUseCase
 ): ViewModel() {
-
-    private val checkIfHasCharacter: Boolean =
-        savedStateHandle[GraphDestination.Main.CHECK_CHARACTER_ARG_NAME] ?: false
 
     val characterDialogState: Flow<Response<List<CharacterClass>, UiText>> =
         getCurrentUserUseCase()
@@ -42,10 +38,6 @@ class CharacterSelectViewModel @Inject constructor(
                 Log.i(TAG, msg)
             }
             .map { state ->
-                if (!checkIfHasCharacter) {
-                    return@map Response.Success(emptyList())
-                }
-
                 when (state) {
                     is AuthState.LoggedIn -> Response.Success(
                     state.data.character?.let { usersRepository.getAllCharacterClasses() } ?: emptyList()

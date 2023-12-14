@@ -47,7 +47,7 @@ class FusedLocationRepository @Inject constructor(
                 trySend(Response.Success(location))
             } else {
                 Log.d(TAG, "Location is null")
-                trySend(Response.Error(context.getString(R.string.error_loc_unavailable)))
+                trySend(Response.Error(context.getString(R.string.error_loc_generic)))
             }
         }.addOnFailureListener { e ->
             Log.d(TAG, "Error getting location: ${e.message}")

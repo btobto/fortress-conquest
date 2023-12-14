@@ -24,7 +24,7 @@ fun NavGraphBuilder.authGraph(
                 },
                 onLoginSuccess = {
                     navController.navigateAndClearBackStack(
-                        GraphDestination.Main.getRouteWithArg(checkCharacter = true)
+                        GraphDestination.CharacterSelect.route
                     )
                 },
                 onLoginFailure = { error -> onShowSnackbar(error, null) }
@@ -38,7 +38,7 @@ fun NavGraphBuilder.authGraph(
                 },
                 onRegisterSuccess = {
                     navController.navigateAndClearBackStack(
-                        GraphDestination.Main.getRouteWithArg(checkCharacter = true)
+                        GraphDestination.CharacterSelect.route
                     )
                 },
                 onRegisterFailure = { error -> onShowSnackbar(error, null) }
