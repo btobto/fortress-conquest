@@ -25,7 +25,7 @@ fun LoadingIndicatorWithText(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement =Arrangement.Center,
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CircularProgressIndicator(

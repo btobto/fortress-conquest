@@ -1,6 +1,7 @@
 package com.example.fortressconquest.ui.navigation.main
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
@@ -30,7 +31,8 @@ fun NavGraphBuilder.mainGraph(
 
         composable(route = MainDestination.Map.route) {
             MapScreen(
-                onLocationError = { error -> onShowSnackbar(error, null) }
+                onLocationError = { error -> onShowSnackbar(error, null) },
+                modifier = Modifier.fillMaxSize()
             )
         }
 

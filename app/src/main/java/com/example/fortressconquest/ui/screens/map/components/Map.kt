@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
@@ -19,16 +20,16 @@ fun Map(
     val locationLatLong = LatLng(currentLocation.latitude, currentLocation.longitude)
 
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(locationLatLong, 10f)
+        position = CameraPosition.fromLatLngZoom(locationLatLong, 20f)
     }
 
     GoogleMap(
         modifier = modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState,
-    ) {
-        Marker(
-            state = MarkerState(position = locationLatLong),
-            title = "You"
+        properties = MapProperties(
+            isMyLocationEnabled = true
         )
+    ) {
+
     }
 }

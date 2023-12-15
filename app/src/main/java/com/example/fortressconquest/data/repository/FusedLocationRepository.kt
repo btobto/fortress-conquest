@@ -19,6 +19,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 private const val TAG = "FusedLocationRepo"
@@ -47,7 +48,7 @@ class FusedLocationRepository @Inject constructor(
                 trySend(Response.Success(location))
             } else {
                 Log.d(TAG, "Location is null")
-                trySend(Response.Error(context.getString(R.string.error_loc_generic)))
+                trySend(Response.Error(context.getString(R.string.error_loc_off)))
             }
         }.addOnFailureListener { e ->
             Log.d(TAG, "Error getting location: ${e.message}")
@@ -60,5 +61,13 @@ class FusedLocationRepository @Inject constructor(
         awaitClose {
             Log.d(TAG, "Stopped observing location")
         }
+    }.onEach { response ->
+        val msg = when (response) {
+            is Response.Success -> "Location: ${response.data.latitude}, ${response.data.longitude}"
+            is Response.Error -> "Error: ${response.error}"
+            is Response.Loading -> "Loading"
+            else -> "Unknown"
+        }
+        Log.d(TAG, msg)
     }.flowOn(ioDispatcher)
 }

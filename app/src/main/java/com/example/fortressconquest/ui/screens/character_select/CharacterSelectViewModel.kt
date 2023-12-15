@@ -29,14 +29,6 @@ class CharacterSelectViewModel @Inject constructor(
 
     val characterDialogState: Flow<Response<List<CharacterClass>, UiText>> =
         getCurrentUserUseCase()
-            .onEach { state ->
-                val msg = when (state) {
-                    is AuthState.LoggedIn -> "Logged in"
-                    is AuthState.Loading -> "Loading"
-                    is AuthState.NotLoggedIn -> "Not logged in"
-                }
-                Log.i(TAG, msg)
-            }
             .map { state ->
                 when (state) {
                     is AuthState.LoggedIn -> Response.Success(
