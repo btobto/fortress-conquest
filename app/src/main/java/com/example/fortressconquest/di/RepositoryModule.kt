@@ -29,11 +29,9 @@ object RepositoryModule {
     fun provideLocationRepository(
         fusedLocationProviderClient: FusedLocationProviderClient,
         @ApplicationContext context: Context,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher,
     ): LocationRepository =
         FusedLocationRepository(
             fusedLocationProviderClient,
-            context,
-            ioDispatcher
+            context
         )
 }

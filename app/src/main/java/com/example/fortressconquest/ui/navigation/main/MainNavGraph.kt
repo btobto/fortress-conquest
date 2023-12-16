@@ -31,8 +31,7 @@ fun NavGraphBuilder.mainGraph(
 
         composable(route = MainDestination.Map.route) {
             MapScreen(
-                onLocationError = { error -> onShowSnackbar(error, null) },
-                modifier = Modifier.fillMaxSize()
+                onLocationError = { error -> onShowSnackbar(error, null) }
             )
         }
 

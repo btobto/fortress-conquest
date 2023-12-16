@@ -1,6 +1,7 @@
 package com.example.fortressconquest.ui.screens.map
 
 import android.location.Location
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fortressconquest.domain.model.Response
@@ -11,6 +12,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+private const val TAG = "MapViewModel"
 
 sealed interface LocationState {
     data class PermissionsNotGranted(val permanently: Boolean): LocationState
@@ -28,6 +31,8 @@ class MapViewModel @Inject constructor(
     val locationState = _locationState.asStateFlow()
 
     fun onLocationGranted() {
+        Log.d(TAG, "Starting fetching of location")
+
         _locationState.value = LocationState.Loading
 
         viewModelScope.launch {
@@ -38,8 +43,7 @@ class MapViewModel @Inject constructor(
                         is Response.Error -> LocationState.Error(response.error)
                         else -> LocationState.Loading
                     }
-                }
-                .collect {
+                }.collect {
                     _locationState.value = it
                 }
         }

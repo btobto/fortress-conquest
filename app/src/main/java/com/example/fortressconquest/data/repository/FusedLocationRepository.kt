@@ -2,6 +2,7 @@ package com.example.fortressconquest.data.repository
 
 import android.content.Context
 import android.location.Location
+import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.example.fortressconquest.R
@@ -9,10 +10,10 @@ import com.example.fortressconquest.di.IoDispatcher
 import com.example.fortressconquest.domain.model.Response
 import com.example.fortressconquest.domain.repository.LocationRepository
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
-import com.google.android.gms.tasks.CancellationToken
-import com.google.android.gms.tasks.CancellationTokenSource
-import com.google.android.gms.tasks.OnTokenCanceledListener
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.awaitClose
@@ -27,39 +28,44 @@ private const val TAG = "FusedLocationRepo"
 class FusedLocationRepository @Inject constructor(
     private val fusedLocationProviderClient: FusedLocationProviderClient,
     @ApplicationContext private val context: Context,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ): LocationRepository {
+
+    private companion object {
+        const val LOCATION_REQUEST_INTERVAL_MS = 3000L
+    }
 
     @RequiresPermission(allOf = [
         android.Manifest.permission.ACCESS_FINE_LOCATION,
         android.Manifest.permission.ACCESS_COARSE_LOCATION
     ])
     override fun getCurrentLocation(): Flow<Response<Location, String>> = callbackFlow<Response<Location, String>> {
-        fusedLocationProviderClient.getCurrentLocation(
-            Priority.PRIORITY_HIGH_ACCURACY,
-            object : CancellationToken() {
-                override fun onCanceledRequested(p0: OnTokenCanceledListener): CancellationToken =
-                    CancellationTokenSource().token
+        val locationRequest = LocationRequest.Builder(LOCATION_REQUEST_INTERVAL_MS)
+            .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+            .build()
 
-                override fun isCancellationRequested(): Boolean = false
+        val locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                val location = locationResult.lastLocation
+
+                if (location != null) {
+                    trySend(Response.Success(location))
+                } else {
+                    trySend(Response.Error(context.getString(R.string.error_loc_off)))
+                }
             }
-        ).addOnSuccessListener { location ->
-            if (location != null) {
-                trySend(Response.Success(location))
-            } else {
-                Log.d(TAG, "Location is null")
-                trySend(Response.Error(context.getString(R.string.error_loc_off)))
-            }
-        }.addOnFailureListener { e ->
-            Log.d(TAG, "Error getting location: ${e.message}")
+        }
+
+        fusedLocationProviderClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.getMainLooper()
+        ).addOnFailureListener { e ->
             trySend(Response.Error(e.message ?: context.getString(R.string.error_loc_generic)))
-        }.addOnCanceledListener {
-            Log.d(TAG, "Canceled")
-            trySend(Response.Error(context.getString(R.string.error_loc_cancelled)))
         }
 
         awaitClose {
             Log.d(TAG, "Stopped observing location")
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback)
         }
     }.onEach { response ->
         val msg = when (response) {
@@ -69,5 +75,5 @@ class FusedLocationRepository @Inject constructor(
             else -> "Unknown"
         }
         Log.d(TAG, msg)
-    }.flowOn(ioDispatcher)
+    }
 }

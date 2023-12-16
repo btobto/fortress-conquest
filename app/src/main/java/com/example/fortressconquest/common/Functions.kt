@@ -89,7 +89,9 @@ fun Context.openAppSettings() {
     Intent(
         Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
         Uri.fromParts("package", packageName, null)
-    ).also(::startActivity)
+    )
+    .apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
+    .also(::startActivity)
 }
 
 fun Context.findActivity(): Activity {

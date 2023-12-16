@@ -17,10 +17,8 @@ fun Map(
     currentLocation: Location,
     modifier: Modifier = Modifier
 ) {
-    val locationLatLong = LatLng(currentLocation.latitude, currentLocation.longitude)
-
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(locationLatLong, 20f)
+        position = CameraPosition.fromLatLngZoom(LatLng(currentLocation.latitude, currentLocation.longitude), 20f)
     }
 
     GoogleMap(
@@ -30,6 +28,5 @@ fun Map(
             isMyLocationEnabled = true
         )
     ) {
-
     }
 }

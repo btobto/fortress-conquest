@@ -1,8 +1,11 @@
 package com.example.fortressconquest.ui.screens.map
 
 import android.Manifest
+import android.util.Log
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -46,14 +49,18 @@ fun MapScreen(
     val locationState by mapViewModel.locationState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        locationPermissionsLauncher.launch(locationPermissions)
+        locationPermissionsLauncher.launchLocationPermissions()
     }
 
     MapScreenContent(
         locationState = locationState,
         onLocationError = onLocationError,
         onOpenAppSettings = context.findActivity()::openAppSettings,
-        onRequestPermissions = { locationPermissionsLauncher.launch(locationPermissions) },
-        modifier = modifier
+        onRequestPermissions = { locationPermissionsLauncher.launchLocationPermissions() },
+        modifier = modifier.fillMaxSize()
     )
+}
+
+private fun ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>>.launchLocationPermissions() {
+    this.launch(locationPermissions)
 }
