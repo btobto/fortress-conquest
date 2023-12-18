@@ -5,5 +5,6 @@ import com.example.fortressconquest.domain.model.Response
 import kotlinx.coroutines.flow.Flow
 
 interface LocationRepository {
-    fun getCurrentLocation(): Flow<Response<Location, String>>
+    fun getCurrentLocationUpdates(): Flow<Response<Location, String>>
+    suspend fun getCurrentLocation(): Response<Location, String>
 }

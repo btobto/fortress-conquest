@@ -1,7 +1,6 @@
 package com.example.fortressconquest.ui.screens.map
 
 import android.Manifest
-import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,8 +14,8 @@ import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fortressconquest.common.findActivity
-import com.example.fortressconquest.common.openAppSettings
 import com.example.fortressconquest.ui.screens.map.components.MapScreenContent
+
 
 private val locationPermissions = arrayOf(
     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -55,7 +54,6 @@ fun MapScreen(
     MapScreenContent(
         locationState = locationState,
         onLocationError = onLocationError,
-        onOpenAppSettings = context.findActivity()::openAppSettings,
         onRequestPermissions = { locationPermissionsLauncher.launchLocationPermissions() },
         modifier = modifier.fillMaxSize()
     )

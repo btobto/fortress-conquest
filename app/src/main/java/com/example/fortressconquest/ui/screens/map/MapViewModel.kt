@@ -6,10 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fortressconquest.domain.model.Response
 import com.example.fortressconquest.domain.repository.LocationRepository
+import com.example.fortressconquest.domain.usecase.GetCurrentUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,7 +25,8 @@ sealed interface LocationState {
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    private val locationRepository: LocationRepository
+    private val locationRepository: LocationRepository,
+    private val getCurrentUserUseCase: GetCurrentUserUseCase
 ): ViewModel() {
 
     private val _locationState: MutableStateFlow<LocationState> = MutableStateFlow(LocationState.Loading)
@@ -33,23 +35,21 @@ class MapViewModel @Inject constructor(
     fun onLocationGranted() {
         Log.d(TAG, "Starting fetching of location")
 
-        _locationState.value = LocationState.Loading
+        _locationState.update { LocationState.Loading }
 
         viewModelScope.launch {
-            locationRepository.getCurrentLocation()
-                .map { response ->
-                    when (response) {
-                        is Response.Success -> LocationState.Success(response.data)
-                        is Response.Error -> LocationState.Error(response.error)
-                        else -> LocationState.Loading
-                    }
-                }.collect {
-                    _locationState.value = it
-                }
+            _locationState.update { getCurrentLocation() }
         }
     }
 
     fun onLocationDenied(permanently: Boolean) {
-        _locationState.value = LocationState.PermissionsNotGranted(permanently)
+        _locationState.update { LocationState.PermissionsNotGranted(permanently) }
     }
+
+    private suspend fun getCurrentLocation(): LocationState =
+        when (val location = locationRepository.getCurrentLocation()) {
+            is Response.Success ->  LocationState.Success(location.data)
+            is Response.Error -> LocationState.Error(location.error)
+            else -> LocationState.Loading
+        }
 }

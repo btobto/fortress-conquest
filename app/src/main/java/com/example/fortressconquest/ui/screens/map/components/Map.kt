@@ -4,21 +4,29 @@ import android.location.Location
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
+
+private const val DEFAULT_ZOOM = 19f
 
 @Composable
 fun Map(
-    currentLocation: Location,
+    initialLocation: Location,
     modifier: Modifier = Modifier
 ) {
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(currentLocation.latitude, currentLocation.longitude), 20f)
+        position = CameraPosition.fromLatLngZoom(
+            LatLng(
+                initialLocation.latitude,
+                initialLocation.longitude
+            ),
+            DEFAULT_ZOOM
+        )
     }
 
     GoogleMap(
@@ -26,7 +34,20 @@ fun Map(
         cameraPositionState = cameraPositionState,
         properties = MapProperties(
             isMyLocationEnabled = true
-        )
+        ),
+        uiSettings = MapUiSettings(
+            zoomControlsEnabled = false,
+        ),
+        onMyLocationButtonClick = {
+            cameraPositionState.move(
+                CameraUpdateFactory.zoomTo(DEFAULT_ZOOM)
+            )
+            false
+        },
+        onMyLocationClick = { location ->
+
+        }
     ) {
+
     }
 }

@@ -4,7 +4,9 @@ import android.content.Context
 import com.example.fortressconquest.common.Constants
 import com.example.fortressconquest.data.repository.FirebaseAuthRepository
 import com.example.fortressconquest.data.repository.FirestoreUsersRepository
+import com.example.fortressconquest.data.repository.FusedLocationRepository
 import com.example.fortressconquest.domain.repository.AuthRepository
+import com.example.fortressconquest.domain.repository.LocationRepository
 import com.example.fortressconquest.domain.repository.UsersRepository
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -73,5 +75,19 @@ object AppModule {
         FirestoreUsersRepository(
             usersRef,
             characterClassesRef
+        )
+
+    @Provides
+    @Singleton
+    fun provideLocationRepository(
+        fusedLocationProviderClient: FusedLocationProviderClient,
+        @ApplicationContext context: Context,
+        scope: CoroutineScope
+
+    ): LocationRepository =
+        FusedLocationRepository(
+            fusedLocationProviderClient,
+            context,
+            scope
         )
 }

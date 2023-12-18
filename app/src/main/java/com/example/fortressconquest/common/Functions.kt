@@ -4,13 +4,11 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import android.util.Patterns
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
 import com.example.fortressconquest.R
 import com.example.fortressconquest.common.model.UiText
 import com.example.fortressconquest.common.model.ValidationResult
@@ -85,14 +83,11 @@ fun showToast(context: Context, @StringRes messageId: Int) {
     ).show()
 }
 
-fun Context.openAppSettings() {
+fun Activity.createOpenAppSettingsIntent(): Intent =
     Intent(
         Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
         Uri.fromParts("package", packageName, null)
     )
-    .apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
-    .also(::startActivity)
-}
 
 fun Context.findActivity(): Activity {
     var context = this
