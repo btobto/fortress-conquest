@@ -31,7 +31,8 @@ fun MapScreenContent(
         contract = ActivityResultContracts.StartActivityForResult(),
         onResult = {
             Log.d(TAG, "Returned from settings, requesting permissions")
-            onRequestPermissions() }
+            onRequestPermissions()
+        }
     )
 
     AnimatedContent(

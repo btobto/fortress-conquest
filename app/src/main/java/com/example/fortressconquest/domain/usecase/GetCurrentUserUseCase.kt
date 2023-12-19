@@ -39,7 +39,7 @@ class GetCurrentUserUseCase @Inject constructor(
         .flatMapLatest { state ->
             when(state) {
                 is AuthState.LoggedIn ->
-                    usersRepository.getUserFlow(state.data.uid)
+                    usersRepository.getUserFlow(state.data.id)
                         .map { user -> AuthState.LoggedIn(user!!) }
                         .retryWhen { _, attempt ->
                             if (attempt > 3) return@retryWhen false
@@ -51,7 +51,7 @@ class GetCurrentUserUseCase @Inject constructor(
                             true
                         }
                         .onEach {
-                            Log.i(TAG, "Get user success, user id: ${state.data.uid}")
+                            Log.i(TAG, "Get user success, user id: ${state.data.id}")
                         }
                         .catch { e ->
                             Log.i(TAG, "Retries failed")

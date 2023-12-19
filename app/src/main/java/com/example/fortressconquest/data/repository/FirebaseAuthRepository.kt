@@ -40,7 +40,7 @@ class FirebaseAuthRepository @Inject constructor(
     private fun FirebaseUser.toAuthResponse(): AuthResponse =
         this.run {
             AuthResponse(
-                uid = uid
+                id = uid
             )
         }
 }

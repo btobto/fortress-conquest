@@ -21,19 +21,21 @@ class FirestoreUsersRepository @Inject constructor(
         return characterClassesRef.get().await().toObjects(CharacterClass::class.java)
     }
 
-    override suspend fun getUser(uid: String): User? {
-        return usersRef.document(uid).get().await().toObject()
+    override suspend fun getUser(id: String): User? {
+        val a = usersRef.document(id).get()
+        val b = a.await()
+        return usersRef.document(id).get().await().toObject()
     }
 
     override suspend fun createUser(user: User) {
-        usersRef.document(user.uid).set(user).await()
+        usersRef.document(user.id).set(user).await()
     }
 
     override suspend fun setUserCharacterClass(user: User, character: CharacterClass) {
-        usersRef.document(user.uid).update(Constants.USER_CHARACTER_FIELD, character).await()
+        usersRef.document(user.id).update(Constants.USER_CHARACTER_FIELD, character).await()
     }
 
-    override fun getUserFlow(uid: String): Flow<User?> {
-        return usersRef.document(uid).dataObjects()
+    override fun getUserFlow(id: String): Flow<User?> {
+        return usersRef.document(id).dataObjects()
     }
 }

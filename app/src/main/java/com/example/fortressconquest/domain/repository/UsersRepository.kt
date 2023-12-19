@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.Flow
 interface UsersRepository {
     suspend fun getAllCharacterClasses(): List<CharacterClass>
 
-    suspend fun getUser(uid: String): User?
+    suspend fun getUser(id: String): User?
 
     suspend fun createUser(user: User)
 
     suspend fun setUserCharacterClass(user: User, character: CharacterClass)
 
-    fun getUserFlow(uid: String): Flow<User?>
+    fun getUserFlow(id: String): Flow<User?>
 }

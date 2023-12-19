@@ -17,12 +17,12 @@ class RegisterUseCase @Inject constructor(
 
         val uploadedImageUri = storageRepository.uploadUserImage(
             localUri = registrationData.localPhotoUri,
-            userId = authResponse.uid,
+            userId = authResponse.id,
         )
 
         val user = registrationData.run {
             User(
-                uid = authResponse.uid,
+                id = authResponse.id,
                 firstName = firstName,
                 lastName = lastName,
                 photoUri = uploadedImageUri.toString()

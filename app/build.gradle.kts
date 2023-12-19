@@ -89,6 +89,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-storage")
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.firebase:geofire-android-common:3.2.0")
 
     implementation("io.coil-kt:coil-compose:2.5.0")
 
