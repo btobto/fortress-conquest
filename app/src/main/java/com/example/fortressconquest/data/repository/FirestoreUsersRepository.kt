@@ -22,8 +22,6 @@ class FirestoreUsersRepository @Inject constructor(
     }
 
     override suspend fun getUser(id: String): User? {
-        val a = usersRef.document(id).get()
-        val b = a.await()
         return usersRef.document(id).get().await().toObject()
     }
 

@@ -33,6 +33,10 @@ annotation class UsersCollectionReference
 @Retention(AnnotationRetention.BINARY)
 annotation class CharacterClassesCollectionReference
 
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class FortressesCollectionReference
+
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
@@ -60,6 +64,11 @@ object AppModule {
     @Provides
     fun provideCharacterClassesRef(): CollectionReference =
         Firebase.firestore.collection(Constants.CHARACTER_CLASSES_COLLECTION)
+
+    @FortressesCollectionReference
+    @Provides
+    fun provideFortressesRef(): CollectionReference =
+        Firebase.firestore.collection(Constants.FORTRESSES_COLLECTION)
 
     @Provides
     fun provideAuthRepository(): AuthRepository =

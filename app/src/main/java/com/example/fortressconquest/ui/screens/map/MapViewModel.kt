@@ -1,55 +1,50 @@
 package com.example.fortressconquest.ui.screens.map
 
-import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.fortressconquest.domain.model.Response
 import com.example.fortressconquest.domain.repository.LocationRepository
-import com.example.fortressconquest.domain.usecase.GetCurrentUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
 import javax.inject.Inject
-
-private const val TAG = "MapViewModel"
-
-sealed interface LocationState {
-    data class PermissionsNotGranted(val permanently: Boolean): LocationState
-    object Loading: LocationState
-    data class Success(val location: Location): LocationState
-    data class Error(val error: String): LocationState
-}
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    private val locationRepository: LocationRepository,
-    private val getCurrentUserUseCase: GetCurrentUserUseCase
+    locationRepository: LocationRepository,
 ): ViewModel() {
 
-    private val _locationState: MutableStateFlow<LocationState> = MutableStateFlow(LocationState.Loading)
-    val locationState = _locationState.asStateFlow()
+    val locationFlow = locationRepository.getCurrentLocationUpdates()
+    val initialLocation = locationFlow
+        .filter { it is Response.Success }
+        .take(1)
 
-    fun onLocationGranted() {
-        Log.d(TAG, "Starting fetching of location")
+    private var isMapLoaded = false
 
-        _locationState.update { LocationState.Loading }
-
-        viewModelScope.launch {
-            _locationState.update { getCurrentLocation() }
+    val mapContentState = locationFlow
+        .map { state ->
+            when {
+                state is Response.Loading || !isMapLoaded -> Response.Loading
+                else -> state
+            }
         }
-    }
-
-    fun onLocationDenied(permanently: Boolean) {
-        _locationState.update { LocationState.PermissionsNotGranted(permanently) }
-    }
-
-    private suspend fun getCurrentLocation(): LocationState =
-        when (val location = locationRepository.getCurrentLocation()) {
-            is Response.Success ->  LocationState.Success(location.data)
-            is Response.Error -> LocationState.Error(location.error)
-            else -> LocationState.Loading
+        .distinctUntilChanged { old, new ->
+            old is Response.Success && new is Response.Success
         }
+        .onEach { state ->
+            val msg = when (state) {
+                is Response.Error -> state.error
+                is Response.Loading -> "Loading"
+                is Response.Success -> "Success"
+                else -> "Unknown"
+            }
+            Log.d(TAG, "Map content state: $msg")
+        }
+
+    fun onMapLoaded() {
+        isMapLoaded = true
+    }
 }

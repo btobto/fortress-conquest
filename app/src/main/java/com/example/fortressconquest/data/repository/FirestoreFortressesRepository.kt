@@ -1,6 +1,7 @@
 package com.example.fortressconquest.data.repository
 
 import android.location.Location
+import com.example.fortressconquest.di.FortressesCollectionReference
 import com.example.fortressconquest.domain.model.Fortress
 import com.example.fortressconquest.domain.model.User
 import com.example.fortressconquest.domain.repository.FortressesRepository
@@ -14,7 +15,7 @@ import java.util.Date
 import javax.inject.Inject
 
 class FirestoreFortressesRepository @Inject constructor(
-    private val fortressesRef: CollectionReference
+    @FortressesCollectionReference private val fortressesRef: CollectionReference
 ): FortressesRepository {
     override suspend fun setFortress(user: User, location: Location) {
         val doc = fortressesRef.document()

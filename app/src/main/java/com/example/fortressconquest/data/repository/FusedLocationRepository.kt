@@ -10,6 +10,7 @@ import com.example.fortressconquest.R
 import com.example.fortressconquest.domain.model.Response
 import com.example.fortressconquest.domain.repository.LocationRepository
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationAvailability
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -51,8 +53,14 @@ class FusedLocationRepository @Inject constructor(
                 if (location != null) {
                     trySend(Response.Success(location))
                 } else {
+                    Log.d(TAG, "Location is null")
                     trySend(Response.Error(context.getString(R.string.error_loc_unavailable)))
                 }
+            }
+
+            override fun onLocationAvailability(availability: LocationAvailability) {
+                Log.d(TAG, "Location availability: ${availability.isLocationAvailable}")
+                trySend(Response.Error(context.getString(R.string.error_loc_off)))
             }
         }
 
@@ -76,6 +84,7 @@ class FusedLocationRepository @Inject constructor(
         android.Manifest.permission.ACCESS_COARSE_LOCATION
     ])
     override fun getCurrentLocationUpdates(): Flow<Response<Location, String>> = _locationFlow
+        .onStart { emit(getCurrentLocation()) }
         .onEach { response ->
             val msg = when (response) {
                 is Response.Success -> "Location: ${response.data.latitude}, ${response.data.longitude}"
