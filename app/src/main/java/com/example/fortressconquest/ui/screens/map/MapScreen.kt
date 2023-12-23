@@ -36,7 +36,6 @@ private sealed interface PermissionsState {
 
 @Composable
 fun MapScreen(
-    onLocationError: suspend (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -98,7 +97,6 @@ fun MapScreen(
             )
             PermissionsState.Loading -> LoadingScreen(modifier = modifier)
             PermissionsState.Granted -> MapScreenContent(
-                onLocationError = onLocationError,
                 modifier = modifier
             )
         }

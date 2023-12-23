@@ -17,16 +17,18 @@ class MapViewModel @Inject constructor(
     locationRepository: LocationRepository,
 ): ViewModel() {
 
+    private var isMapLoaded = false
+
     val locationFlow = locationRepository.getCurrentLocationUpdates()
+
     val initialLocation = locationFlow
         .filter { it is Response.Success }
         .take(1)
 
-    private var isMapLoaded = false
-
     val mapContentState = locationFlow
         .map { state ->
             when {
+                state is Response.Error -> state
                 state is Response.Loading || !isMapLoaded -> Response.Loading
                 else -> state
             }
@@ -36,12 +38,12 @@ class MapViewModel @Inject constructor(
         }
         .onEach { state ->
             val msg = when (state) {
-                is Response.Error -> state.error
+                is Response.Error -> "Error"
                 is Response.Loading -> "Loading"
                 is Response.Success -> "Success"
                 else -> "Unknown"
             }
-            Log.d(TAG, "Map content state: $msg")
+            Log.d(TAG, "Map content state: $msg, Is map loaded: $isMapLoaded")
         }
 
     fun onMapLoaded() {

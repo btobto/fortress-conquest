@@ -47,7 +47,7 @@ fun AppNavHost(
             )
         }
 
-        mainGraph(navController, onShowSnackbar)
+        mainGraph(navController)
     }
 }
 

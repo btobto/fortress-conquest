@@ -13,8 +13,7 @@ import com.example.fortressconquest.ui.screens.map.MapScreen
 import com.example.fortressconquest.ui.screens.profile.ProfileScreen
 
 fun NavGraphBuilder.mainGraph(
-    navController: NavHostController,
-    onShowSnackbar: suspend (String, String?) -> Boolean
+    navController: NavHostController
 ) {
     navigation(
         route = GraphDestination.Main.route,
@@ -23,7 +22,6 @@ fun NavGraphBuilder.mainGraph(
 
         composable(route = MainDestination.Map.route) {
             MapScreen(
-                onLocationError = { error -> onShowSnackbar(error, null) },
                 modifier = Modifier.fillMaxSize()
             )
         }
