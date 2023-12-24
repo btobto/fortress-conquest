@@ -46,6 +46,7 @@
     <string name="map">Map</string>
     <string name="leaderboard">Leaderboard</string>
     <string name="profile">Profile</string>
+    <string name="log_out">Log out</string>
 
     <string name="error_loc_off">Location services are off.</string>
     <string name="error_loc_generic">Error getting location.</string>
@@ -63,4 +64,11 @@
     <string name="lock_camera">Lock camera</string>
     <string name="unlock_camera">Unlock camera</string>
     <string name="filters">Filters</string>
+
+    <string name="log_out_confirm_title">Confirm logout</string>
+    <string name="log_out_confirm_text">Are you sure you want to log out?</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="place_fortress_forbidden_title">Can\'t place a fortress</string>
+    <string name="place_fortress_forbidden_text">No fortresses left! You need to level up before placing another fortress.</string>
 </resources>

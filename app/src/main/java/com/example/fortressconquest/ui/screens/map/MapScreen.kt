@@ -97,7 +97,10 @@ fun MapScreen(
             )
             PermissionsState.Loading -> LoadingScreen(modifier = modifier)
             PermissionsState.Granted -> MapScreenContent(
-                modifier = modifier
+                modifier = modifier,
+                onProfileButtonClicked = {},
+                onLeaderboardButtonClicked = {},
+                onLogOutButtonClicked = {}
             )
         }
     }

@@ -21,14 +21,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.fortressconquest.common.animateToLocation
+import com.example.fortressconquest.common.moveToLocation
+import com.example.fortressconquest.domain.model.AuthState
 import com.example.fortressconquest.domain.model.Response
 import com.example.fortressconquest.ui.components.LoadingScreen
 import com.example.fortressconquest.ui.screens.map.MapViewModel
 import com.example.fortressconquest.ui.screens.map.TAG
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.LocationSource
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
@@ -41,6 +41,9 @@ private const val DEFAULT_ANIMATION_DURATION_MS = 500
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreenContent(
+    onProfileButtonClicked: () -> Unit,
+    onLeaderboardButtonClicked: () -> Unit,
+    onLogOutButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
     mapViewModel: MapViewModel = hiltViewModel(),
 ) {
@@ -66,10 +69,13 @@ fun MapScreenContent(
 
     val filtersSheetState = rememberModalBottomSheetState()
     var showFiltersSheet by remember { mutableStateOf(false) }
+    var cantPlaceFortressDialog by remember { mutableStateOf(false) }
+    var logoutDialog by remember { mutableStateOf(false) }
 
     val locationState by mapViewModel.locationFlow.collectAsStateWithLifecycle(Response.Loading)
     val initialLocationState by mapViewModel.initialLocation.collectAsStateWithLifecycle(Response.Loading)
     val mapContentState by mapViewModel.mapContentState.collectAsStateWithLifecycle(Response.Loading)
+    val currentUser by mapViewModel.currentUserState.collectAsStateWithLifecycle(AuthState.Loading)
 
     val locationSource = remember {
         object : LocationSource {
@@ -90,7 +96,9 @@ fun MapScreenContent(
     }
 
     BottomMapBar(
-        onMoreActionsButtonClicked = { },
+        onProfileButtonClicked = onProfileButtonClicked,
+        onLeaderboardButtonClicked = onLeaderboardButtonClicked,
+        onLogOutButtonClicked = { logoutDialog = true },
         onMyLocationButtonClicked = {
             val location = locationState
             if (location is Response.Success) {
@@ -116,7 +124,17 @@ fun MapScreenContent(
             }
         },
         onFiltersButtonClicked = { showFiltersSheet = true },
-        onPlaceFortressButtonClicked = { },
+        onPlaceFortressButtonClicked = {
+            val location = locationState
+            val user = currentUser
+            if (location is Response.Success && user is AuthState.LoggedIn) {
+                if (user.data.canSetFortress()) {
+                    mapViewModel.placeFortress(user.data, location.data)
+                } else {
+                    cantPlaceFortressDialog = true
+                }
+            }
+        },
         cameraLocked = cameraLocked,
     ) { innerPadding ->
 
@@ -124,15 +142,7 @@ fun MapScreenContent(
             val initialLocation = initialLocationState
             if (initialLocation is Response.Success) {
                 Log.d(TAG, "Initial location: ${initialLocation.data.latitude}, ${initialLocation.data.longitude}")
-                cameraPositionState.move(
-                    CameraUpdateFactory.newLatLngZoom(
-                        LatLng(
-                            initialLocation.data.latitude,
-                            initialLocation.data.longitude
-                        ),
-                        DEFAULT_ZOOM
-                    )
-                )
+                cameraPositionState.moveToLocation(initialLocation.data, DEFAULT_ZOOM)
             }
         }
 
@@ -182,38 +192,31 @@ fun MapScreenContent(
                     is Response.Error -> {
                         LocationError(
                             text = targetState.error,
-                            modifier = Modifier.background(color = MaterialTheme.colorScheme.surface)
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(color = MaterialTheme.colorScheme.surface)
                         )
                     }
                     else -> Unit
                 }
             }
+
+            if (logoutDialog) {
+                LogOutDialog(
+                    onConfirm = {
+                        logoutDialog = false
+                        onLogOutButtonClicked()
+                    },
+                    onDismiss = { logoutDialog = false }
+                )
+            }
+
+            if (cantPlaceFortressDialog) {
+                FortressForbiddenDialog(
+                    onDismiss = { cantPlaceFortressDialog = false }
+                )
+            }
         }
     }
 }
 
-private suspend fun CameraPositionState.animateToLocation(
-    location: Location,
-    durationMs: Int = Int.MAX_VALUE
-) {
-    this.animate(
-        update = CameraUpdateFactory.newLatLng(
-            LatLng(location.latitude, location.longitude)
-        ),
-        durationMs = durationMs
-    )
-}
-
-private suspend fun CameraPositionState.animateToLocation(
-    location: Location,
-    zoom: Float,
-    durationMs: Int = Int.MAX_VALUE
-) {
-    this.animate(
-        update = CameraUpdateFactory.newLatLngZoom(
-            LatLng(location.latitude, location.longitude),
-            zoom
-        ),
-        durationMs = durationMs
-    )
-}

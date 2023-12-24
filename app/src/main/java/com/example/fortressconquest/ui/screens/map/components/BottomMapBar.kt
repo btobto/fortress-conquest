@@ -1,6 +1,8 @@
 package com.example.fortressconquest.ui.screens.map.components
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.FilterList
@@ -10,19 +12,30 @@ import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.MyLocation
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.dp
 import com.example.fortressconquest.R
 
 @Composable
 fun BottomMapBar(
-    onMoreActionsButtonClicked: () -> Unit,
+    onProfileButtonClicked: () -> Unit,
+    onLeaderboardButtonClicked: () -> Unit,
+    onLogOutButtonClicked: () -> Unit,
     onMyLocationButtonClicked: () -> Unit,
     onLockCameraButtonClicked: () -> Unit,
     onFiltersButtonClicked: () -> Unit,
@@ -31,12 +44,14 @@ fun BottomMapBar(
     modifier: Modifier = Modifier,
     content: @Composable (PaddingValues) -> Unit
 ) {
+    var expandedMenuState by remember { mutableStateOf(false) }
+
     Scaffold(
         modifier = modifier,
         bottomBar = {
             BottomAppBar(
                 actions = {
-                    IconButton(onClick = onMoreActionsButtonClicked) {
+                    IconButton(onClick = { expandedMenuState = true }) {
                         Icon(imageVector = Icons.Outlined.MoreVert, contentDescription = stringResource(R.string.more_actions))
                     }
                     IconButton(onClick = onMyLocationButtonClicked) {
@@ -65,7 +80,28 @@ fun BottomMapBar(
                     }
                 }
             )
-        },
-        content = content
-    )
+        }
+    ) { innerPadding ->
+        Box(modifier = Modifier.fillMaxSize()) {
+            content(innerPadding)
+            DropdownMenu(
+                expanded = expandedMenuState,
+                onDismissRequest = { expandedMenuState = false },
+                offset = DpOffset(10.dp, 0.dp)
+            ) {
+                DropdownMenuItem(
+                    text = { Text(text = stringResource(id = R.string.profile)) }, 
+                    onClick = onProfileButtonClicked
+                )
+                DropdownMenuItem(
+                    text = { Text(text = stringResource(id = R.string.leaderboard)) },
+                    onClick = onLeaderboardButtonClicked
+                )
+                DropdownMenuItem(
+                    text = { Text(text = stringResource(id = R.string.log_out)) },
+                    onClick = onLogOutButtonClicked
+                )
+            }
+        }
+    }
 }

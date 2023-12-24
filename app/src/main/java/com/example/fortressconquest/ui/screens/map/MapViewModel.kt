@@ -1,9 +1,12 @@
 package com.example.fortressconquest.ui.screens.map
 
+import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.fortressconquest.domain.model.Response
+import com.example.fortressconquest.domain.model.User
 import com.example.fortressconquest.domain.repository.LocationRepository
+import com.example.fortressconquest.domain.usecase.GetCurrentUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -15,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MapViewModel @Inject constructor(
     locationRepository: LocationRepository,
+    val currentUserUseCase: GetCurrentUserUseCase
 ): ViewModel() {
 
     private var isMapLoaded = false
@@ -46,7 +50,13 @@ class MapViewModel @Inject constructor(
             Log.d(TAG, "Map content state: $msg, Is map loaded: $isMapLoaded")
         }
 
+    val currentUserState = currentUserUseCase()
+
     fun onMapLoaded() {
         isMapLoaded = true
+    }
+
+    fun placeFortress(user: User, currentLocation: Location) {
+
     }
 }

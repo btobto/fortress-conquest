@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
+import android.location.Location
 import android.net.Uri
 import android.provider.Settings
 import android.util.Patterns
@@ -12,6 +13,9 @@ import androidx.annotation.StringRes
 import com.example.fortressconquest.R
 import com.example.fortressconquest.common.model.UiText
 import com.example.fortressconquest.common.model.ValidationResult
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.CameraPositionState
 
 fun validateEmail(input: String): ValidationResult {
     if (input.isBlank()) {
@@ -96,4 +100,47 @@ fun Context.findActivity(): Activity {
         context = context.baseContext
     }
     throw IllegalStateException("Permissions should be called in the context of an Activity")
+}
+
+suspend fun CameraPositionState.animateToLocation(
+    location: Location,
+    durationMs: Int = Int.MAX_VALUE
+) {
+    this.animate(
+        update = CameraUpdateFactory.newLatLng(
+            LatLng(location.latitude, location.longitude)
+        ),
+        durationMs = durationMs
+    )
+}
+
+suspend fun CameraPositionState.animateToLocation(
+    location: Location,
+    zoom: Float,
+    durationMs: Int = Int.MAX_VALUE
+) {
+    this.animate(
+        update = CameraUpdateFactory.newLatLngZoom(
+            LatLng(location.latitude, location.longitude),
+            zoom
+        ),
+        durationMs = durationMs
+    )
+}
+
+fun CameraPositionState.moveToLocation(location: Location) {
+    this.move(
+        update = CameraUpdateFactory.newLatLng(
+            LatLng(location.latitude, location.longitude)
+        )
+    )
+}
+
+fun CameraPositionState.moveToLocation(location: Location, zoom: Float) {
+    this.move(
+        update = CameraUpdateFactory.newLatLngZoom(
+            LatLng(location.latitude, location.longitude),
+            zoom
+        )
+    )
 }
