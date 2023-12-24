@@ -71,4 +71,6 @@
     <string name="cancel">Cancel</string>
     <string name="place_fortress_forbidden_title">Can\'t place a fortress</string>
     <string name="place_fortress_forbidden_text">No fortresses left! You need to level up before placing another fortress.</string>
+    <string name="fortress_placement_title">Confirm placement</string>
+    <string name="fortress_placement_text">Are you sure you want to place a fortress here? Fortresses left: %1$d.</string>
 </resources>

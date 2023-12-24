@@ -25,6 +25,7 @@ import com.example.fortressconquest.common.animateToLocation
 import com.example.fortressconquest.common.moveToLocation
 import com.example.fortressconquest.domain.model.AuthState
 import com.example.fortressconquest.domain.model.Response
+import com.example.fortressconquest.domain.model.User
 import com.example.fortressconquest.ui.components.LoadingScreen
 import com.example.fortressconquest.ui.screens.map.MapViewModel
 import com.example.fortressconquest.ui.screens.map.TAG
@@ -37,6 +38,12 @@ import kotlinx.coroutines.launch
 
 private const val DEFAULT_ZOOM = 19f
 private const val DEFAULT_ANIMATION_DURATION_MS = 500
+
+sealed interface FortressPlacementDialogState {
+    data class Allowed(val user: User, val location: Location): FortressPlacementDialogState
+    object Forbidden: FortressPlacementDialogState
+    object Hidden: FortressPlacementDialogState
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,13 +76,13 @@ fun MapScreenContent(
 
     val filtersSheetState = rememberModalBottomSheetState()
     var showFiltersSheet by remember { mutableStateOf(false) }
-    var cantPlaceFortressDialog by remember { mutableStateOf(false) }
+    var placeFortressDialogState: FortressPlacementDialogState by remember { mutableStateOf(FortressPlacementDialogState.Hidden) }
     var logoutDialog by remember { mutableStateOf(false) }
 
     val locationState by mapViewModel.locationFlow.collectAsStateWithLifecycle(Response.Loading)
     val initialLocationState by mapViewModel.initialLocation.collectAsStateWithLifecycle(Response.Loading)
     val mapContentState by mapViewModel.mapContentState.collectAsStateWithLifecycle(Response.Loading)
-    val currentUser by mapViewModel.currentUserState.collectAsStateWithLifecycle(AuthState.Loading)
+    val currentUserState by mapViewModel.currentUserState.collectAsStateWithLifecycle(AuthState.Loading)
 
     val locationSource = remember {
         object : LocationSource {
@@ -126,12 +133,12 @@ fun MapScreenContent(
         onFiltersButtonClicked = { showFiltersSheet = true },
         onPlaceFortressButtonClicked = {
             val location = locationState
-            val user = currentUser
+            val user = currentUserState
             if (location is Response.Success && user is AuthState.LoggedIn) {
-                if (user.data.canSetFortress()) {
-                    mapViewModel.placeFortress(user.data, location.data)
+                placeFortressDialogState = if (user.data.canSetFortress()) {
+                    FortressPlacementDialogState.Allowed(user.data, location.data)
                 } else {
-                    cantPlaceFortressDialog = true
+                    FortressPlacementDialogState.Forbidden
                 }
             }
         },
@@ -170,15 +177,6 @@ fun MapScreenContent(
                 onMapLoaded = mapViewModel::onMapLoaded
             )
 
-            if (showFiltersSheet) {
-                ModalBottomSheet(
-                    onDismissRequest = { showFiltersSheet = false },
-                    sheetState = filtersSheetState,
-                ) {
-
-                }
-            }
-
             AnimatedContent(
                 targetState = mapContentState,
                 label = "Map content animated content"
@@ -201,6 +199,15 @@ fun MapScreenContent(
                 }
             }
 
+            if (showFiltersSheet) {
+                ModalBottomSheet(
+                    onDismissRequest = { showFiltersSheet = false },
+                    sheetState = filtersSheetState,
+                ) {
+
+                }
+            }
+
             if (logoutDialog) {
                 LogOutDialog(
                     onConfirm = {
@@ -211,10 +218,19 @@ fun MapScreenContent(
                 )
             }
 
-            if (cantPlaceFortressDialog) {
-                FortressForbiddenDialog(
-                    onDismiss = { cantPlaceFortressDialog = false }
+            when (val state = placeFortressDialogState) {
+                is FortressPlacementDialogState.Allowed -> PlaceFortressDialog(
+                    fortressesLeft = state.user.let { it.level - it.fortressCount },
+                    onConfirm = {
+                        placeFortressDialogState = FortressPlacementDialogState.Hidden
+                        mapViewModel.placeFortress(state.user, state.location)
+                    },
+                    onDismiss = { placeFortressDialogState = FortressPlacementDialogState.Hidden }
                 )
+                is FortressPlacementDialogState.Forbidden -> PlaceFortressForbiddenDialog(
+                    onDismiss = { placeFortressDialogState = FortressPlacementDialogState.Hidden }
+                )
+                else -> Unit
             }
         }
     }

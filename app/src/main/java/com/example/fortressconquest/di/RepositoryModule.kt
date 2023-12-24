@@ -6,6 +6,7 @@ import com.example.fortressconquest.domain.repository.FortressesRepository
 import com.example.fortressconquest.domain.repository.StorageRepository
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.storage
 import dagger.Module
 import dagger.Provides
@@ -25,9 +26,12 @@ object RepositoryModule {
     @ViewModelScoped
     @Provides
     fun provideFortressesRepository(
-        @FortressesCollectionReference fortressesRef: CollectionReference
+        @FortressesCollectionReference fortressesRef: CollectionReference,
+        @UsersCollectionReference usersRef: CollectionReference
     ): FortressesRepository =
         FirestoreFortressesRepository(
-            fortressesRef
+            fortressesRef,
+            usersRef,
+            Firebase.firestore,
         )
 }
