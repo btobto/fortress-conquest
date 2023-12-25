@@ -21,8 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MapViewModel @Inject constructor(
     locationRepository: LocationRepository,
-    val currentUserUseCase: GetCurrentUserUseCase,
-    val fortressesRepository: FortressesRepository
+    private val currentUserUseCase: GetCurrentUserUseCase,
+    private val fortressesRepository: FortressesRepository
 ): ViewModel() {
 
     private var isMapLoaded = false

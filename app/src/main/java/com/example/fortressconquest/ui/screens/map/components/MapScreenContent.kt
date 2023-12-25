@@ -7,10 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -45,7 +42,6 @@ sealed interface FortressPlacementDialogState {
     object Hidden: FortressPlacementDialogState
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreenContent(
     onProfileButtonClicked: () -> Unit,
@@ -74,7 +70,6 @@ fun MapScreenContent(
         )
     }
 
-    val filtersSheetState = rememberModalBottomSheetState()
     var showFiltersSheet by remember { mutableStateOf(false) }
     var placeFortressDialogState: FortressPlacementDialogState by remember { mutableStateOf(FortressPlacementDialogState.Hidden) }
     var logoutDialog by remember { mutableStateOf(false) }
@@ -200,12 +195,14 @@ fun MapScreenContent(
             }
 
             if (showFiltersSheet) {
-                ModalBottomSheet(
-                    onDismissRequest = { showFiltersSheet = false },
-                    sheetState = filtersSheetState,
-                ) {
-
-                }
+                FiltersBottomSheet(
+                    onDismiss = {
+                        showFiltersSheet = false
+                    },
+                    onApplyFilters = {
+                        showFiltersSheet = false
+                    },
+                )
             }
 
             if (logoutDialog) {
@@ -219,17 +216,19 @@ fun MapScreenContent(
             }
 
             when (val state = placeFortressDialogState) {
-                is FortressPlacementDialogState.Allowed -> PlaceFortressDialog(
-                    fortressesLeft = state.user.let { it.level - it.fortressCount },
-                    onConfirm = {
-                        placeFortressDialogState = FortressPlacementDialogState.Hidden
-                        mapViewModel.placeFortress(state.user, state.location)
-                    },
-                    onDismiss = { placeFortressDialogState = FortressPlacementDialogState.Hidden }
-                )
-                is FortressPlacementDialogState.Forbidden -> PlaceFortressForbiddenDialog(
-                    onDismiss = { placeFortressDialogState = FortressPlacementDialogState.Hidden }
-                )
+                is FortressPlacementDialogState.Allowed ->
+                    PlaceFortressConfirmDialog(
+                        fortressesLeft = state.user.let { it.level - it.fortressCount },
+                        onConfirm = {
+                            placeFortressDialogState = FortressPlacementDialogState.Hidden
+                            mapViewModel.placeFortress(state.user, state.location)
+                        },
+                        onDismiss = { placeFortressDialogState = FortressPlacementDialogState.Hidden }
+                    )
+                is FortressPlacementDialogState.Forbidden ->
+                    PlaceFortressForbiddenDialog(
+                        onDismiss = { placeFortressDialogState = FortressPlacementDialogState.Hidden }
+                    )
                 else -> Unit
             }
         }

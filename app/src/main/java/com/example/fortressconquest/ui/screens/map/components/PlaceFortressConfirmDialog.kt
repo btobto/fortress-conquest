@@ -11,7 +11,7 @@ import androidx.compose.ui.res.stringResource
 import com.example.fortressconquest.R
 
 @Composable
-fun PlaceFortressDialog(
+fun PlaceFortressConfirmDialog(
     fortressesLeft: Int,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit = {},

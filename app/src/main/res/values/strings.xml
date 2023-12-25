@@ -54,8 +54,9 @@
     <string name="error_loc_perms_denied">Location permissions denied.</string>
     <string name="error_loc_perms_denied_verbose">App needs location services in order to function properly. Please grant the app location permissions.</string>
     <string name="error_loc_perms_denied_permanently_verbose">App needs location services in order to function properly. Please grant the app location permissions in settings.</string>
-    <string name="loading_map">Loading map&#8230;</string>
     <string name="error_loc_unavailable">Location unavailable.</string>
+
+    <string name="loading_map">Loading map&#8230;</string>
     <string name="grant_permissions">Grant permissions</string>
     <string name="open_settings">Open settings</string>
     <string name="place_fortress">Place fortress</string>
@@ -67,10 +68,17 @@
 
     <string name="log_out_confirm_title">Confirm logout</string>
     <string name="log_out_confirm_text">Are you sure you want to log out?</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
     <string name="place_fortress_forbidden_title">Can\'t place a fortress</string>
     <string name="place_fortress_forbidden_text">No fortresses left! You need to level up before placing another fortress.</string>
     <string name="fortress_placement_title">Confirm placement</string>
     <string name="fortress_placement_text">Are you sure you want to place a fortress here? Fortresses left: %1$d.</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="apply">Apply</string>
+
+    <string name="radius">Radius</string>
+    <string name="opponent_level">Opponent level</string>
+
+    <string name="level_range">Level %1$d - Level %2$d</string>
 </resources>
