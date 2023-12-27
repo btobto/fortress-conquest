@@ -6,7 +6,9 @@ import com.example.fortressconquest.di.UsersCollectionReference
 import com.example.fortressconquest.domain.model.CharacterClass
 import com.example.fortressconquest.domain.model.User
 import com.example.fortressconquest.domain.repository.UsersRepository
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.dataObjects
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.flow.Flow
@@ -23,6 +25,12 @@ class FirestoreUsersRepository @Inject constructor(
 
     override suspend fun getUser(id: String): User? {
         return usersRef.document(id).get().await().toObject()
+    }
+
+    override suspend fun getUsers(ids: List<String>): List<User> {
+        val tasks = ids.map { id -> usersRef.document(id).get() }
+        return Tasks.whenAllComplete(tasks).await()
+            .mapNotNull { task -> (task.result as DocumentSnapshot).toObject(User::class.java) }
     }
 
     override suspend fun createUser(user: User) {

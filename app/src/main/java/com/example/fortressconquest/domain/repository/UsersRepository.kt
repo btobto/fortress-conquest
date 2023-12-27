@@ -9,6 +9,8 @@ interface UsersRepository {
 
     suspend fun getUser(id: String): User?
 
+    suspend fun getUsers(ids: List<String>): List<User>
+
     suspend fun createUser(user: User)
 
     suspend fun setUserCharacterClass(user: User, character: CharacterClass)

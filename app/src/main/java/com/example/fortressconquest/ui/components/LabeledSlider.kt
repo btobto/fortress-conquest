@@ -16,11 +16,11 @@ import androidx.compose.ui.Modifier
 @Composable
 fun LabeledSlider(
     label: String,
+    onValueChangeFinished: (Float) -> Unit,
     modifier: Modifier = Modifier,
     valueFormatter: (Float) -> String = { it.toString() },
     initialValue: Float = 0f,
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
-    onValueChangeFinished: () -> Unit = {},
     steps: Int = 0
 ) {
     var sliderPosition by remember { mutableFloatStateOf(
@@ -40,7 +40,7 @@ fun LabeledSlider(
             onValueChange = { sliderPosition = it },
             valueRange = valueRange,
             steps = steps,
-            onValueChangeFinished = onValueChangeFinished
+            onValueChangeFinished = { onValueChangeFinished(sliderPosition) }
         )
     }
 }

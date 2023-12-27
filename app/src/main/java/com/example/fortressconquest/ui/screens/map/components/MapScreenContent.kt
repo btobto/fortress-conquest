@@ -27,14 +27,16 @@ import com.example.fortressconquest.ui.components.LoadingScreen
 import com.example.fortressconquest.ui.screens.map.MapViewModel
 import com.example.fortressconquest.ui.screens.map.TAG
 import com.google.android.gms.maps.LocationSource
+import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.launch
 
 private const val DEFAULT_ZOOM = 19f
-private const val DEFAULT_ANIMATION_DURATION_MS = 500
+private const val DEFAULT_ANIMATION_DURATION_MS = 1000
 
 sealed interface FortressPlacementDialogState {
     data class Allowed(val user: User, val location: Location): FortressPlacementDialogState
@@ -78,6 +80,8 @@ fun MapScreenContent(
     val initialLocationState by mapViewModel.initialLocation.collectAsStateWithLifecycle(Response.Loading)
     val mapContentState by mapViewModel.mapContentState.collectAsStateWithLifecycle(Response.Loading)
     val currentUserState by mapViewModel.currentUserState.collectAsStateWithLifecycle(AuthState.Loading)
+    val filtersState by mapViewModel.filtersState.collectAsStateWithLifecycle()
+    val fortressesState by mapViewModel.fortressesState.collectAsStateWithLifecycle()
 
     val locationSource = remember {
         object : LocationSource {
@@ -170,7 +174,20 @@ fun MapScreenContent(
                 properties = mapProperties,
                 uiSettings = mapUiSettings,
                 onMapLoaded = mapViewModel::onMapLoaded
-            )
+            ) {
+                fortressesState.forEach { fortress ->
+                    FortressMarker(
+                        state = MarkerState(
+                            position = LatLng(fortress.latitude, fortress.longitude),
+                        ),
+                        fortress = fortress,
+                        onClick = {
+                            Log.d(TAG, "Fortress clicked: ${fortress.id}")
+                            true
+                        }
+                    )
+                }
+            }
 
             AnimatedContent(
                 targetState = mapContentState,
@@ -199,9 +216,11 @@ fun MapScreenContent(
                     onDismiss = {
                         showFiltersSheet = false
                     },
-                    onApplyFilters = {
+                    onApplyFilters = { filters ->
                         showFiltersSheet = false
+                        mapViewModel.applyFilters(filters)
                     },
+                    initialValue = filtersState
                 )
             }
 

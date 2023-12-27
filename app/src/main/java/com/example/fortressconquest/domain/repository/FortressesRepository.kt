@@ -7,5 +7,5 @@ import com.example.fortressconquest.domain.model.User
 interface FortressesRepository {
     suspend fun setFortress(user: User, location: Location)
 
-    suspend fun getFortressesInRadius(location: Location, radius: Double): List<Fortress>
+    suspend fun getFortressesInRadius(location: Location, radiusInM: Double): List<Fortress>
 }

@@ -46,10 +46,10 @@ class FirestoreFortressesRepository @Inject constructor(
         }.await()
     }
 
-    override suspend fun getFortressesInRadius(location: Location, radius: Double): List<Fortress> {
+    override suspend fun getFortressesInRadius(location: Location, radiusInM: Double): List<Fortress> {
         val userGeoLocation = GeoLocation(location.latitude, location.longitude)
 
-        val bounds = GeoFireUtils.getGeoHashQueryBounds(userGeoLocation, radius)
+        val bounds = GeoFireUtils.getGeoHashQueryBounds(userGeoLocation, radiusInM)
 
         val tasks = bounds.map { bound ->
             fortressesRef
@@ -69,7 +69,7 @@ class FirestoreFortressesRepository @Inject constructor(
                     userGeoLocation
                 )
 
-                distance <= radius
+                distance <= radiusInM
             }
             .map { doc -> doc.toObject(Fortress::class.java)!! }
 

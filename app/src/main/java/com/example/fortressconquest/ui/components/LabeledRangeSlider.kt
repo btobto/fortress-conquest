@@ -16,13 +16,14 @@ import androidx.compose.ui.Modifier
 @Composable
 fun LabeledRangeSlider(
     label: String,
+    onValueChangeFinished: (ClosedFloatingPointRange<Float>) -> Unit,
     modifier: Modifier = Modifier,
-    valueFormatter: (Float, Float) -> String,
+    valueFormatter: (Float, Float) -> String = { start, end -> "$start - $end" },
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
-    onValueChangeFinished: () -> Unit = {},
+    initialValue: ClosedFloatingPointRange<Float> = valueRange,
     steps: Int = 0
 ) {
-    var sliderPosition by remember { mutableStateOf(valueRange) }
+    var sliderPosition by remember { mutableStateOf(initialValue) }
 
     Column(modifier = modifier) {
         Row(
@@ -37,7 +38,7 @@ fun LabeledRangeSlider(
             onValueChange = { sliderPosition = it },
             valueRange = valueRange,
             steps = steps,
-            onValueChangeFinished = onValueChangeFinished
+            onValueChangeFinished = { onValueChangeFinished(sliderPosition) }
         )
     }
 }
