@@ -81,4 +81,9 @@
     <string name="opponent_level">Opponent level</string>
 
     <string name="level_range">Level %1$d - Level %2$d</string>
+    <string name="error_user_not_found">User not found.</string>
+    <string name="fortress_owner_profile_picture">Fortress owner\'s profile picture.</string>
+
+    <string name="level_number">Level %1$d</string>
+    <string name="battle">Battle</string>
 </resources>

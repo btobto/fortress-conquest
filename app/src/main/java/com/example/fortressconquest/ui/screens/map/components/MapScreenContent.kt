@@ -21,6 +21,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fortressconquest.common.animateToLocation
 import com.example.fortressconquest.common.moveToLocation
 import com.example.fortressconquest.domain.model.AuthState
+import com.example.fortressconquest.domain.model.Fortress
 import com.example.fortressconquest.domain.model.Response
 import com.example.fortressconquest.domain.model.User
 import com.example.fortressconquest.ui.components.LoadingScreen
@@ -49,6 +50,7 @@ fun MapScreenContent(
     onProfileButtonClicked: () -> Unit,
     onLeaderboardButtonClicked: () -> Unit,
     onLogOutButtonClicked: () -> Unit,
+    onFortressClicked: (Fortress) -> Unit,
     modifier: Modifier = Modifier,
     mapViewModel: MapViewModel = hiltViewModel(),
 ) {
@@ -183,6 +185,7 @@ fun MapScreenContent(
                         fortress = fortress,
                         onClick = {
                             Log.d(TAG, "Fortress clicked: ${fortress.id}")
+                            onFortressClicked(fortress)
                             true
                         }
                     )

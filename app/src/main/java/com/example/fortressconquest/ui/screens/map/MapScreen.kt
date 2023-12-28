@@ -6,8 +6,11 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.WarningAmber
+import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,12 +20,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import com.example.fortressconquest.R
 import com.example.fortressconquest.common.createOpenAppSettingsIntent
 import com.example.fortressconquest.common.findActivity
+import com.example.fortressconquest.domain.model.Fortress
 import com.example.fortressconquest.ui.components.LoadingScreen
+import com.example.fortressconquest.ui.screens.fortress.FortressDialog
 import com.example.fortressconquest.ui.screens.map.components.LocationErrorWithButton
+import com.example.fortressconquest.ui.screens.map.components.LogOutDialog
 import com.example.fortressconquest.ui.screens.map.components.MapScreenContent
 
 internal const val TAG = "MapScreen"
@@ -36,7 +44,8 @@ private sealed interface PermissionsState {
 
 @Composable
 fun MapScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onLogout: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -97,12 +106,32 @@ fun MapScreen(
             )
             PermissionsState.Loading -> LoadingScreen(modifier = modifier)
             PermissionsState.Granted -> {
+                var fortressDialogState: Fortress? by remember { mutableStateOf(null) }
+                var leaderboardDialogState by remember { mutableStateOf(false) }
+                var profileDialogState by remember { mutableStateOf(false) }
+
                 MapScreenContent(
                     modifier = modifier,
-                    onProfileButtonClicked = {},
+                    onProfileButtonClicked = {profileDialogState = true},
                     onLeaderboardButtonClicked = {},
-                    onLogOutButtonClicked = {}
+                    onLogOutButtonClicked = onLogout,
+                    onFortressClicked = { fortress -> fortressDialogState = fortress }
                 )
+
+                val fortress = fortressDialogState
+                if (fortress != null) {
+                    FortressDialog(
+                        fortress = fortress,
+                        onDismiss = { fortressDialogState = null },
+                    )
+                }
+
+                if (leaderboardDialogState) {
+
+                }
+
+                if (profileDialogState) {
+                }
             }
         }
     }
