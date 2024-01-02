@@ -6,11 +6,8 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.WarningAmber
-import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -20,8 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import com.example.fortressconquest.R
 import com.example.fortressconquest.common.createOpenAppSettingsIntent
@@ -29,8 +24,8 @@ import com.example.fortressconquest.common.findActivity
 import com.example.fortressconquest.domain.model.Fortress
 import com.example.fortressconquest.ui.components.LoadingScreen
 import com.example.fortressconquest.ui.screens.fortress.FortressDialog
+import com.example.fortressconquest.ui.screens.leaderboard.LeaderboardDialog
 import com.example.fortressconquest.ui.screens.map.components.LocationErrorWithButton
-import com.example.fortressconquest.ui.screens.map.components.LogOutDialog
 import com.example.fortressconquest.ui.screens.map.components.MapScreenContent
 
 internal const val TAG = "MapScreen"
@@ -94,6 +89,7 @@ fun MapScreen(
                 onClick = { locationPermissionsLauncher.launchLocationPermissions() },
                 modifier = modifier
             )
+
             PermissionsState.PermanentlyDenied -> LocationErrorWithButton(
                 text = stringResource(id = R.string.error_loc_perms_denied_verbose),
                 buttonLabel = stringResource(R.string.open_settings),
@@ -104,7 +100,9 @@ fun MapScreen(
                 },
                 modifier = modifier
             )
+
             PermissionsState.Loading -> LoadingScreen(modifier = modifier)
+            
             PermissionsState.Granted -> {
                 var fortressDialogState: Fortress? by remember { mutableStateOf(null) }
                 var leaderboardDialogState by remember { mutableStateOf(false) }
@@ -112,8 +110,8 @@ fun MapScreen(
 
                 MapScreenContent(
                     modifier = modifier,
-                    onProfileButtonClicked = {profileDialogState = true},
-                    onLeaderboardButtonClicked = {},
+                    onProfileButtonClicked = { profileDialogState = true },
+                    onLeaderboardButtonClicked = { leaderboardDialogState = true },
                     onLogOutButtonClicked = onLogout,
                     onFortressClicked = { fortress -> fortressDialogState = fortress }
                 )
@@ -127,7 +125,9 @@ fun MapScreen(
                 }
 
                 if (leaderboardDialogState) {
-
+                    LeaderboardDialog(
+                        onDismiss = { leaderboardDialogState = false }
+                    )
                 }
 
                 if (profileDialogState) {

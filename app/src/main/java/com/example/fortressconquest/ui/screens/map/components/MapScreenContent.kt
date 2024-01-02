@@ -231,6 +231,7 @@ fun MapScreenContent(
                 LogOutDialog(
                     onConfirm = {
                         logoutDialog = false
+                        mapViewModel.logout()
                         onLogOutButtonClicked()
                     },
                     onDismiss = { logoutDialog = false }

@@ -86,4 +86,6 @@
 
     <string name="level_number">Level %1$d</string>
     <string name="battle">Battle</string>
+
+    <string name="xp_number">%1$d XP</string>
 </resources>

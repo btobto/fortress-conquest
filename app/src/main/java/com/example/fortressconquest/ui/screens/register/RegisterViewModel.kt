@@ -13,7 +13,7 @@ import com.example.fortressconquest.common.validatePassword
 import com.example.fortressconquest.common.validatePhoneNumber
 import com.example.fortressconquest.domain.model.RegistrationData
 import com.example.fortressconquest.domain.model.Response
-import com.example.fortressconquest.domain.usecase.RegisterUseCase
+import com.example.fortressconquest.domain.repository.AuthRepository
 import com.example.fortressconquest.ui.utils.FormField
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,7 +36,7 @@ data class RegisterFormState(
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val registerUseCase: RegisterUseCase
+    private val authRepository: AuthRepository
 ): ViewModel() {
     private val _registerFormState = MutableStateFlow(RegisterFormState())
     val registerFormState = _registerFormState.asStateFlow()
@@ -129,7 +129,7 @@ class RegisterViewModel @Inject constructor(
 
             val response: Response<Boolean, UiText> = try {
                  registerFormState.value.run {
-                    registerUseCase.invoke(
+                    authRepository.register(
                         RegistrationData(
                             email = email.value,
                             password = password.value,

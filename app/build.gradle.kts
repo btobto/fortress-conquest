@@ -95,6 +95,11 @@ dependencies {
 
     implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.google.maps.android:maps-compose:4.3.0")
+
+    val pagingVersion = "3.2.1"
+    implementation("androidx.paging:paging-common-ktx:$pagingVersion")
+    implementation("androidx.paging:paging-runtime-ktx:$pagingVersion")
+    implementation("androidx.paging:paging-compose:3.3.0-alpha02")
 }
 
 kapt {

@@ -1,13 +1,13 @@
 package com.example.fortressconquest.di
 
-import com.example.fortressconquest.data.repository.FirebaseStorageRepository
+import com.example.fortressconquest.data.paging.UsersPagingSource
 import com.example.fortressconquest.data.repository.FirestoreFortressesRepository
+import com.example.fortressconquest.data.repository.FirestoreUsersRepository
 import com.example.fortressconquest.domain.repository.FortressesRepository
-import com.example.fortressconquest.domain.repository.StorageRepository
+import com.example.fortressconquest.domain.repository.UsersRepository
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.firestore
-import com.google.firebase.storage.storage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,13 +18,21 @@ import dagger.hilt.android.scopes.ViewModelScoped
 @InstallIn(ViewModelComponent::class)
 object RepositoryModule {
 
-    @ViewModelScoped
     @Provides
-    fun provideStorageRepository(): StorageRepository =
-        FirebaseStorageRepository(Firebase.storage)
+    @ViewModelScoped
+    fun provideUsersRepository(
+        @UsersCollectionReference usersRef: CollectionReference,
+        @CharacterClassesCollectionReference characterClassesRef: CollectionReference,
+        usersPagingSource: UsersPagingSource
+    ): UsersRepository =
+        FirestoreUsersRepository(
+            usersRef,
+            characterClassesRef,
+            usersPagingSource
+        )
 
-    @ViewModelScoped
     @Provides
+    @ViewModelScoped
     fun provideFortressesRepository(
         @FortressesCollectionReference fortressesRef: CollectionReference,
         @UsersCollectionReference usersRef: CollectionReference

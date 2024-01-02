@@ -9,9 +9,9 @@ import com.example.fortressconquest.common.model.UiText
 import com.example.fortressconquest.domain.model.AuthState
 import com.example.fortressconquest.domain.model.Response
 import com.example.fortressconquest.domain.model.User
+import com.example.fortressconquest.domain.repository.AuthRepository
 import com.example.fortressconquest.domain.repository.LocationRepository
 import com.example.fortressconquest.domain.repository.UsersRepository
-import com.example.fortressconquest.domain.usecase.GetCurrentUserUseCase
 import com.example.fortressconquest.domain.usecase.SimulateBattleUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +26,7 @@ private const val TAG = "FortressViewModel"
 @HiltViewModel
 class FortressViewModel @Inject constructor(
     locationRepository: LocationRepository,
-    currentUserUseCase: GetCurrentUserUseCase,
+    authRepository: AuthRepository,
     private val usersRepository: UsersRepository,
     private val simulateBattleUseCase: SimulateBattleUseCase
 ): ViewModel() {
@@ -37,7 +37,7 @@ class FortressViewModel @Inject constructor(
     val locationFlow = locationRepository.getCurrentLocationUpdates()
         .filterIsInstance<Response.Success<Location, String>>()
         .take(1)
-    val currentUserState = currentUserUseCase()
+    val currentUserState = authRepository.authState
         .filterIsInstance<AuthState.LoggedIn<User>>()
         .take(1)
 

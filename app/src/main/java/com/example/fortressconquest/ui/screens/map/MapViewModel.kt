@@ -4,13 +4,14 @@ import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.fortressconquest.domain.model.AuthState
 import com.example.fortressconquest.domain.model.Filters
 import com.example.fortressconquest.domain.model.Fortress
 import com.example.fortressconquest.domain.model.Response
 import com.example.fortressconquest.domain.model.User
+import com.example.fortressconquest.domain.repository.AuthRepository
 import com.example.fortressconquest.domain.repository.FortressesRepository
 import com.example.fortressconquest.domain.repository.LocationRepository
-import com.example.fortressconquest.domain.usecase.GetCurrentUserUseCase
 import com.example.fortressconquest.domain.usecase.GetFortressesFilteredUseCase
 import com.example.fortressconquest.ui.screens.map.components.defaultLevelRange
 import com.example.fortressconquest.ui.screens.map.components.defaultRadiusRange
@@ -30,9 +31,9 @@ import javax.inject.Inject
 @HiltViewModel
 class MapViewModel @Inject constructor(
     locationRepository: LocationRepository,
-    currentUserUseCase: GetCurrentUserUseCase,
     private val getFortressesFilteredUseCase: GetFortressesFilteredUseCase,
-    private val fortressesRepository: FortressesRepository
+    private val fortressesRepository: FortressesRepository,
+    private val authRepository: AuthRepository
 ): ViewModel() {
 
     private var isMapLoaded = false
@@ -54,7 +55,12 @@ class MapViewModel @Inject constructor(
             old is Response.Success && new is Response.Success
         }
 
-    val currentUserState = currentUserUseCase()
+    val currentUserState = authRepository.authState
+        .onEach {
+            if (it is AuthState.LoggedIn) {
+                 Log.d(TAG, "character: ${it.data.character ?: "null"}")
+            }
+        }
 
     private val _filtersState = MutableStateFlow(
         Filters(
@@ -112,6 +118,12 @@ class MapViewModel @Inject constructor(
             _fortressesState.emit(
                 getFortressesFilteredUseCase(location, filtersState.value)
             )
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            authRepository.logout()
         }
     }
 }

@@ -10,4 +10,7 @@ object Constants {
     const val USER_CHARACTER_FIELD = "character"
 
     const val USERS_STORAGE = "users"
+
+    const val PAGE_SIZE = 10
+    const val INITIAL_PAGE_SIZE = 10
 }
