@@ -51,4 +51,14 @@ class FirestoreUsersRepository @Inject constructor(
     override suspend fun setUserCharacterClass(user: User, character: CharacterClass) {
         usersRef.document(user.id).update(Constants.USER_CHARACTER_FIELD, character).await()
     }
+
+    override suspend fun addXp(user: User, xp: Int) {
+        val newXp = user.xp + xp
+        val newLevel = if (newXp >= user.nextLevelXp()) user.level + 1 else user.level
+
+        usersRef.document(user.id).update(
+            Constants.USER_XP_FIELD, newXp,
+            Constants.USER_LEVEL_FIELD, newLevel
+        ).await()
+    }
 }

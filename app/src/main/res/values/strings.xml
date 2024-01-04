@@ -88,4 +88,9 @@
     <string name="battle">Battle</string>
 
     <string name="xp_number">%1$d XP</string>
+    <string name="battle_in_progress">Battle in progress…</string>
+    <string name="battle_won_title">Battle won!</string>
+    <string name="battle_won_text">Earned %1$d XP!</string>
+    <string name="battle_lost_title">You lost!</string>
+    <string name="battle_lost_text">Try again next time.</string>
 </resources>

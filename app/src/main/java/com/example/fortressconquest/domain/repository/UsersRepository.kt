@@ -15,4 +15,6 @@ interface UsersRepository {
     fun getUsersPaged(): Flow<PagingData<User>>
 
     suspend fun setUserCharacterClass(user: User, character: CharacterClass)
+
+    suspend fun addXp(user: User, xp: Int)
 }

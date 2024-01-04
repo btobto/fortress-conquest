@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.fortressconquest.R
 import com.example.fortressconquest.common.model.UiText
 import com.example.fortressconquest.domain.model.AuthState
+import com.example.fortressconquest.domain.model.BattleResult
 import com.example.fortressconquest.domain.model.Response
 import com.example.fortressconquest.domain.model.User
 import com.example.fortressconquest.domain.repository.AuthRepository
@@ -14,6 +15,9 @@ import com.example.fortressconquest.domain.repository.LocationRepository
 import com.example.fortressconquest.domain.repository.UsersRepository
 import com.example.fortressconquest.domain.usecase.SimulateBattleUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterIsInstance
@@ -23,12 +27,18 @@ import javax.inject.Inject
 
 private const val TAG = "FortressViewModel"
 
+sealed interface BattleState {
+    object NotStarted: BattleState
+    object InProgress: BattleState
+    data class Finished(val result: BattleResult): BattleState
+}
+
 @HiltViewModel
 class FortressViewModel @Inject constructor(
     locationRepository: LocationRepository,
     authRepository: AuthRepository,
     private val usersRepository: UsersRepository,
-    private val simulateBattleUseCase: SimulateBattleUseCase
+    private val simulateBattle: SimulateBattleUseCase
 ): ViewModel() {
     companion object {
         private const val BATTLE_DISTANCE_M = 10
@@ -43,6 +53,9 @@ class FortressViewModel @Inject constructor(
 
     private val _fortressOwnerState: MutableStateFlow<Response<User, UiText>> = MutableStateFlow(Response.Loading)
     val fortressOwnerState = _fortressOwnerState.asStateFlow()
+
+    private val _battleState: MutableStateFlow<BattleState> = MutableStateFlow(BattleState.NotStarted)
+    val battleState = _battleState.asStateFlow()
 
     fun getFortressOwner(id: String) {
         viewModelScope.launch {
@@ -81,8 +94,22 @@ class FortressViewModel @Inject constructor(
             userLocation,
             fortressLocation)
         ) {
-            val winner = simulateBattleUseCase(currentUser, fortressOwner)
-            Log.d(TAG, "Battle winner: ${winner.firstName} ${winner.lastName}")
+            viewModelScope.launch {
+                _battleState.emit(BattleState.InProgress)
+
+                val battleTask = async {
+                    val result = simulateBattle(currentUser, fortressOwner)
+                    usersRepository.addXp(result.winner, result.xpGained)
+                    result
+                }
+                val simulationTask = async { delay(2000) }
+
+                val battleResult = awaitAll(battleTask, simulationTask).first() as BattleResult
+                Log.d(TAG, "Battle winner: ${battleResult.winner.firstName} ${battleResult.winner.lastName}, xp gained: ${battleResult.xpGained}")
+
+                _battleState.emit(BattleState.Finished(battleResult))
+            }
+
         }
     }
 }

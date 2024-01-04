@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ListItem
@@ -14,10 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -25,8 +21,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import coil.compose.AsyncImage
 import com.example.fortressconquest.R
+import com.example.fortressconquest.ui.components.UserProfilePicture
 
 @Composable
 fun LeaderboardDialog(
@@ -35,7 +31,6 @@ fun LeaderboardDialog(
     leaderboardViewModel: LeaderboardViewModel = hiltViewModel(),
 ) {
     val users = leaderboardViewModel.usersFlow.collectAsLazyPagingItems()
-    val placeholderImage = painterResource(id = R.drawable.pfp_placeholder)
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -63,20 +58,10 @@ fun LeaderboardDialog(
                                     Text(text = "${user.firstName} ${user.lastName}")
                                 },
                                 supportingContent = {
+                                    Text(text = stringResource(id = R.string.level_number, user.level))
                                     Text(text = stringResource(R.string.xp_number, user.xp))
                                 },
-                                leadingContent = {
-                                    AsyncImage(
-                                        model = user.photoUri,
-                                        contentDescription = null,
-                                        placeholder = placeholderImage,
-                                        error = placeholderImage,
-                                        contentScale = ContentScale.Crop,
-                                        modifier = Modifier
-                                            .size(50.dp)
-                                            .clip(CircleShape)
-                                    )
-                                },
+                                leadingContent = { UserProfilePicture(model = user.photoUri) },
                                 colors = ListItemDefaults.colors(
                                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                                 )

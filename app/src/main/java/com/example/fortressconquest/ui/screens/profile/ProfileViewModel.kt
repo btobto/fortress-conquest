@@ -10,7 +10,4 @@ class ProfileViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ): ViewModel() {
 
-    fun logout() {
-        authRepository.logout()
-    }
 }

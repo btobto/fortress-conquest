@@ -76,7 +76,7 @@ object AppModule {
     fun provideUsersPagingQuery(
         @UsersCollectionReference usersRef: CollectionReference
     ): Query =
-        usersRef.orderBy("xp")
+        usersRef.orderBy(Constants.USER_XP_FIELD, Query.Direction.DESCENDING)
 
     @Provides
     fun provideUsersPagingSource(
