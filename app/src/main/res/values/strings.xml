@@ -82,6 +82,7 @@
 
     <string name="level_range">Level %1$d - Level %2$d</string>
     <string name="error_user_not_found">User not found.</string>
+    <string name="error_fortress_not_found">Fortress not found.</string>
     <string name="fortress_owner_profile_picture">Fortress owner\'s profile picture.</string>
 
     <string name="level_number">Level %1$d</string>
@@ -93,4 +94,6 @@
     <string name="battle_won_text">Earned %1$d XP!</string>
     <string name="battle_lost_title">You lost!</string>
     <string name="battle_lost_text">Try again next time.</string>
+
+    <string name="fortress_count">Fortresses left: %1$d</string>
 </resources>

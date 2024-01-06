@@ -21,6 +21,12 @@ class FirestoreFortressesRepository @Inject constructor(
     @UsersCollectionReference private val usersRef: CollectionReference,
     private val db: FirebaseFirestore
 ): FortressesRepository {
+
+    companion object {
+        const val CURRENT_OWNER_ID_FIELD = "currentOwnerId"
+        const val OWNED_SINCE_FIELD = "ownedSince"
+    }
+
     override suspend fun setFortress(user: User, location: Location) {
         val userDoc = usersRef.document(user.id)
         val fortressDoc = fortressesRef.document()
@@ -44,6 +50,10 @@ class FirestoreFortressesRepository @Inject constructor(
 
             null
         }.await()
+    }
+
+    override suspend fun getFortress(id: String): Fortress? {
+        return fortressesRef.document(id).get().await().toObject(Fortress::class.java)
     }
 
     override suspend fun getFortressesInRadius(location: Location, radiusInM: Double): List<Fortress> {

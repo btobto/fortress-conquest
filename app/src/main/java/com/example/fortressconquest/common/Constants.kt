@@ -7,10 +7,6 @@ object Constants {
     const val CHARACTER_CLASSES_COLLECTION = "characterClasses"
     const val FORTRESSES_COLLECTION = "fortresses"
 
-    const val USER_CHARACTER_FIELD = "character"
-    const val USER_XP_FIELD = "xp"
-    const val USER_LEVEL_FIELD = "level"
-
     const val USERS_STORAGE = "users"
 
     const val PAGE_SIZE = 10

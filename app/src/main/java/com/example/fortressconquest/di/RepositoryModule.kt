@@ -23,11 +23,14 @@ object RepositoryModule {
     fun provideUsersRepository(
         @UsersCollectionReference usersRef: CollectionReference,
         @CharacterClassesCollectionReference characterClassesRef: CollectionReference,
+        @FortressesCollectionReference fortressesRef: CollectionReference,
         usersPagingSource: UsersPagingSource
     ): UsersRepository =
         FirestoreUsersRepository(
             usersRef,
             characterClassesRef,
+            fortressesRef,
+            Firebase.firestore,
             usersPagingSource
         )
 

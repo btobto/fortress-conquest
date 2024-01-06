@@ -111,7 +111,11 @@ fun MapScreenContent(
             val location = locationState
             if (location is Response.Success) {
                 scope.launch {
-                    cameraPositionState.animateToLocation(location.data, DEFAULT_ZOOM)
+                    val currentZoom = cameraPositionState.position.zoom
+                    cameraPositionState.animateToLocation(
+                        location.data,
+                        if (currentZoom > DEFAULT_ZOOM) currentZoom else DEFAULT_ZOOM,
+                    )
                 }
             }
         },

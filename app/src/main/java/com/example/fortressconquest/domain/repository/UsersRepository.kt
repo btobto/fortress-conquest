@@ -2,6 +2,7 @@ package com.example.fortressconquest.domain.repository
 
 import androidx.paging.PagingData
 import com.example.fortressconquest.domain.model.CharacterClass
+import com.example.fortressconquest.domain.model.Fortress
 import com.example.fortressconquest.domain.model.User
 import kotlinx.coroutines.flow.Flow
 
@@ -15,6 +16,8 @@ interface UsersRepository {
     fun getUsersPaged(): Flow<PagingData<User>>
 
     suspend fun setUserCharacterClass(user: User, character: CharacterClass)
+
+    suspend fun onBattleWin(winner: User, xp: Int, fortress: Fortress)
 
     suspend fun addXp(user: User, xp: Int)
 }

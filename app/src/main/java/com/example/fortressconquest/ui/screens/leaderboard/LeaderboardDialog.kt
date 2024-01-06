@@ -17,7 +17,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
@@ -26,47 +25,44 @@ import com.example.fortressconquest.ui.components.UserProfilePicture
 
 @Composable
 fun LeaderboardDialog(
-    onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
     leaderboardViewModel: LeaderboardViewModel = hiltViewModel(),
 ) {
     val users = leaderboardViewModel.usersFlow.collectAsLazyPagingItems()
 
-    Dialog(onDismissRequest = onDismiss) {
-        Card(
-            modifier = modifier.size(400.dp),
-            shape = RoundedCornerShape(16.dp)
-        ) {
-            Column {
-                Text(
-                    text = stringResource(R.string.leaderboard),
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(dimensionResource(id = R.dimen.padding_medium)),
-                    textAlign = TextAlign.Center
-                )
+    Card(
+        modifier = modifier.size(400.dp),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column {
+            Text(
+                text = stringResource(R.string.leaderboard),
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(dimensionResource(id = R.dimen.padding_medium)),
+                textAlign = TextAlign.Center
+            )
 
-                LazyColumn {
-                    items(
-                        count = users.itemCount,
-                        key = users.itemKey { it.id }
-                    ) { index ->
-                        users[index]?.let { user ->
-                            ListItem(
-                                headlineContent = {
-                                    Text(text = "${user.firstName} ${user.lastName}")
-                                },
-                                supportingContent = {
-                                    Text(text = stringResource(id = R.string.level_number, user.level))
-                                    Text(text = stringResource(R.string.xp_number, user.xp))
-                                },
-                                leadingContent = { UserProfilePicture(model = user.photoUri) },
-                                colors = ListItemDefaults.colors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                                )
+            LazyColumn {
+                items(
+                    count = users.itemCount,
+                    key = users.itemKey { it.id }
+                ) { index ->
+                    users[index]?.let { user ->
+                        ListItem(
+                            headlineContent = {
+                                Text(text = "${user.firstName} ${user.lastName}")
+                            },
+                            supportingContent = {
+                                Text(text = stringResource(id = R.string.level_number, user.level))
+                                Text(text = stringResource(R.string.xp_number, user.xp))
+                            },
+                            leadingContent = { UserProfilePicture(model = user.photoUri) },
+                            colors = ListItemDefaults.colors(
+                                containerColor = MaterialTheme.colorScheme.surfaceVariant,
                             )
-                        }
+                        )
                     }
                 }
             }

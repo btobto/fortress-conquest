@@ -23,8 +23,6 @@ import com.example.fortressconquest.common.createOpenAppSettingsIntent
 import com.example.fortressconquest.common.findActivity
 import com.example.fortressconquest.domain.model.Fortress
 import com.example.fortressconquest.ui.components.LoadingScreen
-import com.example.fortressconquest.ui.screens.fortress.FortressDialog
-import com.example.fortressconquest.ui.screens.leaderboard.LeaderboardDialog
 import com.example.fortressconquest.ui.screens.map.components.LocationErrorWithButton
 import com.example.fortressconquest.ui.screens.map.components.MapScreenContent
 
@@ -40,7 +38,10 @@ private sealed interface PermissionsState {
 @Composable
 fun MapScreen(
     modifier: Modifier = Modifier,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onNavigateToFortress: (Fortress) -> Unit,
+    onNavigateToProfile: () -> Unit,
+    onNavigateToLeaderboard: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -104,34 +105,13 @@ fun MapScreen(
             PermissionsState.Loading -> LoadingScreen(modifier = modifier)
             
             PermissionsState.Granted -> {
-                var fortressDialogState: Fortress? by remember { mutableStateOf(null) }
-                var leaderboardDialogState by remember { mutableStateOf(false) }
-                var profileDialogState by remember { mutableStateOf(false) }
-
                 MapScreenContent(
                     modifier = modifier,
-                    onProfileButtonClicked = { profileDialogState = true },
-                    onLeaderboardButtonClicked = { leaderboardDialogState = true },
+                    onProfileButtonClicked = onNavigateToProfile,
+                    onLeaderboardButtonClicked = onNavigateToLeaderboard,
                     onLogOutButtonClicked = onLogout,
-                    onFortressClicked = { fortress -> fortressDialogState = fortress }
+                    onFortressClicked = onNavigateToFortress
                 )
-
-                val fortress = fortressDialogState
-                if (fortress != null) {
-                    FortressDialog(
-                        fortress = fortress,
-                        onDismiss = { fortressDialogState = null },
-                    )
-                }
-
-                if (leaderboardDialogState) {
-                    LeaderboardDialog(
-                        onDismiss = { leaderboardDialogState = false }
-                    )
-                }
-
-                if (profileDialogState) {
-                }
             }
         }
     }

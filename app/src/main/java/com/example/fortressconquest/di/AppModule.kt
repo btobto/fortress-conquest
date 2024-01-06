@@ -5,6 +5,7 @@ import com.example.fortressconquest.common.Constants
 import com.example.fortressconquest.data.paging.UsersPagingSource
 import com.example.fortressconquest.data.repository.FirebaseAuthRepository
 import com.example.fortressconquest.data.repository.FirebaseStorageRepository
+import com.example.fortressconquest.data.repository.FirestoreUsersRepository
 import com.example.fortressconquest.data.repository.FusedLocationRepository
 import com.example.fortressconquest.domain.repository.AuthRepository
 import com.example.fortressconquest.domain.repository.LocationRepository
@@ -76,7 +77,7 @@ object AppModule {
     fun provideUsersPagingQuery(
         @UsersCollectionReference usersRef: CollectionReference
     ): Query =
-        usersRef.orderBy(Constants.USER_XP_FIELD, Query.Direction.DESCENDING)
+        usersRef.orderBy(FirestoreUsersRepository.XP_FIELD, Query.Direction.DESCENDING)
 
     @Provides
     fun provideUsersPagingSource(
