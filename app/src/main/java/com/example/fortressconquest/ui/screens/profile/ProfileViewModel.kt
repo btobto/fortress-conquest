@@ -1,7 +1,7 @@
 package com.example.fortressconquest.ui.screens.profile
 
 import androidx.lifecycle.ViewModel
-import com.example.fortressconquest.domain.model.AuthState
+import com.example.fortressconquest.domain.utils.AuthState
 import com.example.fortressconquest.domain.model.User
 import com.example.fortressconquest.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -23,7 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fortressconquest.R
-import com.example.fortressconquest.domain.model.Response
+import com.example.fortressconquest.domain.utils.Response
 import com.example.fortressconquest.ui.components.LoadingDialog
 import com.example.fortressconquest.ui.components.OutlinedInputFieldWithError
 import com.example.fortressconquest.ui.components.PasswordInputField

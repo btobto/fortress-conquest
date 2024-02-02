@@ -1,6 +1,6 @@
 package com.example.fortressconquest.ui.utils
 
-import com.example.fortressconquest.common.model.UiText
+import com.example.fortressconquest.common.utils.UiText
 
 data class FormField (
     val value: String = "",

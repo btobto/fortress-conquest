@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fortressconquest.R
-import com.example.fortressconquest.domain.model.AuthState
-import com.example.fortressconquest.domain.model.Response
+import com.example.fortressconquest.domain.utils.AuthState
+import com.example.fortressconquest.domain.utils.Response
 import com.example.fortressconquest.ui.components.LoadingIndicatorWithText
 import com.example.fortressconquest.ui.screens.fortress.components.FortressDialogContent
 

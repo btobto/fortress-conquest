@@ -1,6 +1,9 @@
 package com.example.fortressconquest.ui.screens.map
 
 import android.Manifest
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -19,7 +22,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import com.example.fortressconquest.R
-import com.example.fortressconquest.common.createOpenAppSettingsIntent
 import com.example.fortressconquest.common.findActivity
 import com.example.fortressconquest.domain.model.Fortress
 import com.example.fortressconquest.ui.components.LoadingScreen
@@ -96,7 +98,10 @@ fun MapScreen(
                 buttonLabel = stringResource(R.string.open_settings),
                 icon = Icons.Outlined.WarningAmber,
                 onClick = {
-                    val intent = context.findActivity().createOpenAppSettingsIntent()
+                    val intent = Intent(
+                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.fromParts("package", context.packageName, null)
+                    )
                     openAppSettingsLauncher.launch(intent)
                 },
                 modifier = modifier

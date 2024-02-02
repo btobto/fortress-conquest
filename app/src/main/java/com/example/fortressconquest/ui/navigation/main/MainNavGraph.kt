@@ -37,7 +37,11 @@ fun NavGraphBuilder.mainGraph(
         }
 
         dialog(route = MainDestination.Profile.route) {
-            ProfileDialog()
+            ProfileDialog(
+                onLogout = {
+                    navController.navigateAndClearBackStack(GraphDestination.Auth.route)
+                }
+            )
         }
 
         dialog(route = MainDestination.Leaderboard.route) {

@@ -2,7 +2,7 @@ package com.example.fortressconquest.data.repository
 
 import android.util.Log
 import com.example.fortressconquest.di.UsersCollectionReference
-import com.example.fortressconquest.domain.model.AuthState
+import com.example.fortressconquest.domain.utils.AuthState
 import com.example.fortressconquest.domain.model.RegistrationData
 import com.example.fortressconquest.domain.model.User
 import com.example.fortressconquest.domain.repository.AuthRepository

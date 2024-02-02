@@ -1,4 +1,4 @@
-package com.example.fortressconquest.common.model
+package com.example.fortressconquest.common.utils
 
 import android.content.Context
 import androidx.annotation.StringRes

@@ -1,4 +1,4 @@
-package com.example.fortressconquest.domain.model
+package com.example.fortressconquest.domain.utils
 
 sealed class Response<out T, out R> {
     object None: Response<Nothing, Nothing>()

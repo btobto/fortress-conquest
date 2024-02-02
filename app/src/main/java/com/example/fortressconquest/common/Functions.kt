@@ -3,16 +3,13 @@ package com.example.fortressconquest.common
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.Intent
 import android.location.Location
-import android.net.Uri
-import android.provider.Settings
 import android.util.Patterns
 import android.widget.Toast
 import androidx.annotation.StringRes
 import com.example.fortressconquest.R
-import com.example.fortressconquest.common.model.UiText
-import com.example.fortressconquest.common.model.ValidationResult
+import com.example.fortressconquest.common.utils.UiText
+import com.example.fortressconquest.common.utils.ValidationResult
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -59,10 +56,10 @@ fun validatePhoneNumber(input: String): ValidationResult {
         )
     }
 
-    if (!Regex("^\\d+\$").matches(input)) {
+    if (!Patterns.PHONE.matcher(input).matches()) {
         return ValidationResult.Error(
             UiText.StringResource(
-                resId = R.string.error_phone_non_digits
+                resId = R.string.error_phone_invalid
             )
         )
     }
@@ -87,19 +84,13 @@ fun showToast(context: Context, @StringRes messageId: Int) {
     ).show()
 }
 
-fun Activity.createOpenAppSettingsIntent(): Intent =
-    Intent(
-        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-        Uri.fromParts("package", packageName, null)
-    )
-
 fun Context.findActivity(): Activity {
     var context = this
     while (context is ContextWrapper) {
         if (context is Activity) return context
         context = context.baseContext
     }
-    throw IllegalStateException("Permissions should be called in the context of an Activity")
+    throw IllegalStateException("Function should be called in the context of an Activity")
 }
 
 suspend fun CameraPositionState.animateToLocation(

@@ -24,12 +24,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fortressconquest.R
-import com.example.fortressconquest.domain.model.AuthState
+import com.example.fortressconquest.domain.utils.AuthState
 import com.example.fortressconquest.ui.components.UserProfilePicture
 
 @Composable
 fun ProfileDialog(
     modifier: Modifier = Modifier,
+    onLogout: () -> Unit,
     profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
     val currentUserState by profileViewModel.currentUserState.collectAsStateWithLifecycle(AuthState.Loading)
@@ -89,7 +90,7 @@ fun ProfileDialog(
 
                 Text(text = stringResource(R.string.fortress_count, currentUser.data.let { it.level - it.fortressCount }))
 
-                Button(onClick = profileViewModel::logout) {
+                Button(onClick = { profileViewModel.logout(); onLogout() }) {
                     Text(text = stringResource(R.string.log_out))
                 }
             }

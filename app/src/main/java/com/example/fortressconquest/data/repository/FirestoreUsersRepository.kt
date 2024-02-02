@@ -83,14 +83,4 @@ class FirestoreUsersRepository @Inject constructor(
             )
         }.await()
     }
-
-    override suspend fun addXp(user: User, xp: Int) {
-        val newXp = user.xp + xp
-        val newLevel = if (newXp >= user.nextLevelXp()) user.level + 1 else user.level
-
-        usersRef.document(user.id).update(
-            XP_FIELD, newXp,
-            LEVEL_FIELD, newLevel
-        ).await()
-    }
 }

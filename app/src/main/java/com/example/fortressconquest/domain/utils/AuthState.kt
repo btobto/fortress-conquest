@@ -1,4 +1,4 @@
-package com.example.fortressconquest.domain.model
+package com.example.fortressconquest.domain.utils
 
 sealed interface AuthState<out T> {
     object Loading: AuthState<Nothing>

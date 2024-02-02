@@ -18,6 +18,7 @@
     <string name="error_last_name_empty">Last name cannot be empty.</string>
     <string name="error_phone_empty">Phone number cannot be empty.</string>
     <string name="error_phone_non_digits">Phone number can only contain digits.</string>
+    <string name="error_phone_invalid">Not a valid phone number.</string>
     <string name="password_visibility_button">Change password visibility.</string>
 
     <string name="error_auth_invalid_credentials">"Invalid email or password."</string>

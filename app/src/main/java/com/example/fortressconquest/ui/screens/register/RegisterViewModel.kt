@@ -6,13 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fortressconquest.R
 import com.example.fortressconquest.common.getErrorText
-import com.example.fortressconquest.common.model.UiText
-import com.example.fortressconquest.common.model.ValidationResult
+import com.example.fortressconquest.common.utils.UiText
+import com.example.fortressconquest.common.utils.ValidationResult
 import com.example.fortressconquest.common.validateEmail
 import com.example.fortressconquest.common.validatePassword
 import com.example.fortressconquest.common.validatePhoneNumber
 import com.example.fortressconquest.domain.model.RegistrationData
-import com.example.fortressconquest.domain.model.Response
+import com.example.fortressconquest.domain.utils.Response
 import com.example.fortressconquest.domain.repository.AuthRepository
 import com.example.fortressconquest.ui.utils.FormField
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -41,7 +41,8 @@ class RegisterViewModel @Inject constructor(
     private val _registerFormState = MutableStateFlow(RegisterFormState())
     val registerFormState = _registerFormState.asStateFlow()
 
-    private val _registerResponseState: MutableStateFlow<Response<Boolean, UiText>> = MutableStateFlow(Response.None)
+    private val _registerResponseState: MutableStateFlow<Response<Boolean, UiText>> = MutableStateFlow(
+        Response.None)
     val registerResponseState = _registerResponseState.asStateFlow()
 
     fun updateEmail(input: String) {

@@ -7,7 +7,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.example.fortressconquest.R
-import com.example.fortressconquest.domain.model.Response
+import com.example.fortressconquest.domain.utils.Response
 import com.example.fortressconquest.domain.repository.LocationRepository
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationAvailability
@@ -36,8 +36,8 @@ class FusedLocationRepository @Inject constructor(
     externalScope: CoroutineScope,
 ): LocationRepository {
 
-    private companion object {
-        const val LOCATION_REQUEST_INTERVAL_MS = 3000L
+    companion object {
+        private const val LOCATION_REQUEST_INTERVAL_MS = 3000L
     }
 
     @SuppressLint("MissingPermission")

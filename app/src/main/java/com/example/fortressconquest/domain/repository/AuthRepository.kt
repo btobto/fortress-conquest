@@ -1,6 +1,6 @@
 package com.example.fortressconquest.domain.repository
 
-import com.example.fortressconquest.domain.model.AuthState
+import com.example.fortressconquest.domain.utils.AuthState
 import com.example.fortressconquest.domain.model.RegistrationData
 import com.example.fortressconquest.domain.model.User
 import kotlinx.coroutines.flow.StateFlow

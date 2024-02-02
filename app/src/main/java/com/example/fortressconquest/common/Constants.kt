@@ -10,5 +10,5 @@ object Constants {
     const val USERS_STORAGE = "users"
 
     const val PAGE_SIZE = 10
-    const val INITIAL_PAGE_SIZE = 10
+    const val INITIAL_PAGE_SIZE = 20
 }

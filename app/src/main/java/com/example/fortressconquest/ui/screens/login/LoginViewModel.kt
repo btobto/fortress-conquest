@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fortressconquest.R
 import com.example.fortressconquest.common.getErrorText
-import com.example.fortressconquest.common.model.UiText
+import com.example.fortressconquest.common.utils.UiText
 import com.example.fortressconquest.common.validateEmail
 import com.example.fortressconquest.common.validatePassword
-import com.example.fortressconquest.domain.model.Response
+import com.example.fortressconquest.domain.utils.Response
 import com.example.fortressconquest.domain.repository.AuthRepository
 import com.example.fortressconquest.ui.utils.FormField
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -33,7 +33,8 @@ class LoginViewModel @Inject constructor(
     private val _loginFormState = MutableStateFlow(LoginFormState())
     val loginFormState: StateFlow<LoginFormState> = _loginFormState.asStateFlow()
 
-    private val _loginResponseState: MutableStateFlow<Response<Boolean, UiText>> = MutableStateFlow(Response.None)
+    private val _loginResponseState: MutableStateFlow<Response<Boolean, UiText>> = MutableStateFlow(
+        Response.None)
     val loginResponseState: StateFlow<Response<Boolean, UiText>> = _loginResponseState.asStateFlow()
 
     fun updateEmail(input: String) {

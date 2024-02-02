@@ -18,6 +18,4 @@ interface UsersRepository {
     suspend fun setUserCharacterClass(user: User, character: CharacterClass)
 
     suspend fun onBattleWin(winner: User, xp: Int, fortress: Fortress)
-
-    suspend fun addXp(user: User, xp: Int)
 }

@@ -6,11 +6,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fortressconquest.R
-import com.example.fortressconquest.common.model.UiText
-import com.example.fortressconquest.domain.model.AuthState
+import com.example.fortressconquest.common.utils.UiText
+import com.example.fortressconquest.domain.utils.AuthState
 import com.example.fortressconquest.domain.model.BattleResult
 import com.example.fortressconquest.domain.model.Fortress
-import com.example.fortressconquest.domain.model.Response
+import com.example.fortressconquest.domain.utils.Response
 import com.example.fortressconquest.domain.model.User
 import com.example.fortressconquest.domain.repository.AuthRepository
 import com.example.fortressconquest.domain.repository.FortressesRepository
@@ -59,10 +59,12 @@ class FortressViewModel @Inject constructor(
         .filterIsInstance<AuthState.LoggedIn<User>>()
         .take(1)
 
-    private val _fortressState: MutableStateFlow<Response<Fortress, UiText>> = MutableStateFlow(Response.Loading)
+    private val _fortressState: MutableStateFlow<Response<Fortress, UiText>> = MutableStateFlow(
+        Response.Loading)
     val fortressState = _fortressState.asStateFlow()
 
-    private val _fortressOwnerState: MutableStateFlow<Response<User, UiText>> = MutableStateFlow(Response.Loading)
+    private val _fortressOwnerState: MutableStateFlow<Response<User, UiText>> = MutableStateFlow(
+        Response.Loading)
     val fortressOwnerState = _fortressOwnerState.asStateFlow()
 
     private val _battleState: MutableStateFlow<BattleState> = MutableStateFlow(BattleState.NotStarted)

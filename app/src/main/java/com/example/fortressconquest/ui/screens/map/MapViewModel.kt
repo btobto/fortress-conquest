@@ -4,10 +4,10 @@ import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.fortressconquest.domain.model.AuthState
+import com.example.fortressconquest.domain.utils.AuthState
 import com.example.fortressconquest.domain.model.Filters
 import com.example.fortressconquest.domain.model.Fortress
-import com.example.fortressconquest.domain.model.Response
+import com.example.fortressconquest.domain.utils.Response
 import com.example.fortressconquest.domain.model.User
 import com.example.fortressconquest.domain.repository.AuthRepository
 import com.example.fortressconquest.domain.repository.FortressesRepository

@@ -3,10 +3,10 @@ package com.example.fortressconquest.ui.screens.character_select
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fortressconquest.R
-import com.example.fortressconquest.common.model.UiText
-import com.example.fortressconquest.domain.model.AuthState
+import com.example.fortressconquest.common.utils.UiText
+import com.example.fortressconquest.domain.utils.AuthState
 import com.example.fortressconquest.domain.model.CharacterClass
-import com.example.fortressconquest.domain.model.Response
+import com.example.fortressconquest.domain.utils.Response
 import com.example.fortressconquest.domain.repository.AuthRepository
 import com.example.fortressconquest.domain.repository.UsersRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

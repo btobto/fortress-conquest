@@ -20,9 +20,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fortressconquest.common.animateToLocation
 import com.example.fortressconquest.common.moveToLocation
-import com.example.fortressconquest.domain.model.AuthState
+import com.example.fortressconquest.domain.utils.AuthState
 import com.example.fortressconquest.domain.model.Fortress
-import com.example.fortressconquest.domain.model.Response
+import com.example.fortressconquest.domain.utils.Response
 import com.example.fortressconquest.domain.model.User
 import com.example.fortressconquest.ui.components.LoadingScreen
 import com.example.fortressconquest.ui.screens.map.MapViewModel
