@@ -1,19 +1,17 @@
 # Fortress Conquest
 
-![Login](./images/1_login.jpg)
-
-![Register](./images/2_register.jpg)
-
-![Character select](./images/3_select_char.jpg)
-
-![Map](./images/4_home.jpg)
-
-![Filters bottom sheet](./images/5_filters.jpg)
-
-![Profile dialog](./images/6_profile.jpg)
-
-![Fortress placement forbidden dialog](./images/7_place_dialog.jpg)
-
-![Leaderboad dialog](./images/8_leaderboard.jpg)
-
-![Fortress dialog](./images/9_fortress.jpg)
+<p align="middle">
+  <img src="./images/1_login.jpg" width="33%"/>
+  <img src="./images/2_register.jpg" width="33%"/>
+  <img src="./images/3_select_char.jpg" width="33%"/>
+</p>
+<p align="middle">
+  <img src="./images/4_home.jpg" width="32%"/>
+  <img src="./images/5_filters.jpg" width="32%"/>
+  <img src="./images/6_profile.jpg" width="32%"/>
+</p>
+<p align="middle">
+  <img src="./images/7_place_dialog.jpg" width="32%"/>
+  <img src="./images/8_leaderboard.jpg" width="32%"/>
+  <img src="./images/9_fortress.jpg" width="32%"/>
+</p>
