@@ -101,10 +101,13 @@ class FirebaseAuthRepository @Inject constructor(
             ).await()
             val id = auth.currentUser!!.uid
 
-            val uploadedImageUri = storageRepository.uploadUserImage(
-                localUri = registrationData.localPhotoUri,
-                userId = id,
-            )
+
+            val uploadedImageUri = registrationData.localPhotoUri?.let {
+                storageRepository.uploadUserImage(
+                    localUri = it,
+                    userId = id,
+                )
+            }
 
             usersRef.document(id).set(
                 User(

@@ -22,7 +22,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.tasks.await
@@ -85,15 +84,15 @@ class FusedLocationRepository @Inject constructor(
     ])
     override fun getCurrentLocationUpdates(): Flow<Response<Location, String>> = _locationFlow
         .onStart { emit(getCurrentLocation()) }
-        .onEach { response ->
-            val msg = when (response) {
-                is Response.Success -> "Location: ${response.data.latitude}, ${response.data.longitude}"
-                is Response.Error -> "Error: ${response.error}"
-                is Response.Loading -> "Loading"
-                else -> "Unknown"
-            }
-            Log.d(TAG, msg)
-        }
+//        .onEach { response ->
+//            val msg = when (response) {
+//                is Response.Success -> "Location: ${response.data.latitude}, ${response.data.longitude}"
+//                is Response.Error -> "Error: ${response.error}"
+//                is Response.Loading -> "Loading"
+//                else -> "Unknown"
+//            }
+//            Log.d(TAG, msg)
+//        }
 
     @RequiresPermission(allOf = [
         android.Manifest.permission.ACCESS_FINE_LOCATION,

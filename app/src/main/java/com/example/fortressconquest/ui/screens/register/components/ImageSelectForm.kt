@@ -16,8 +16,8 @@ import com.example.fortressconquest.ui.components.TakeImageButton
 import com.example.fortressconquest.ui.components.UserProfilePicture
 
 @Composable
-fun ImageSelectDialog(
-    imageUri: Uri,
+fun ImageSelectForm(
+    imageUri: Uri?,
     onImageTaken: (Uri) -> Unit,
     onImageSelected: (Uri) -> Unit,
     onCameraPermissionDenied: () -> Unit,

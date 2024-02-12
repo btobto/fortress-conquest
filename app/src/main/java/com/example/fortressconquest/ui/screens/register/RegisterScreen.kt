@@ -31,7 +31,7 @@ import com.example.fortressconquest.domain.utils.Response
 import com.example.fortressconquest.ui.components.LoadingDialog
 import com.example.fortressconquest.ui.components.OutlinedInputFieldWithError
 import com.example.fortressconquest.ui.components.PasswordInputField
-import com.example.fortressconquest.ui.screens.register.components.ImageSelectDialog
+import com.example.fortressconquest.ui.screens.register.components.ImageSelectForm
 
 @Composable
 fun RegisterScreen(
@@ -58,7 +58,7 @@ fun RegisterScreen(
             Alignment.CenterVertically
         )
     ) {
-        ImageSelectDialog(
+        ImageSelectForm(
             imageUri = formState.imageUri,
             onImageTaken = registerViewModel::updateImageUri,
             onImageSelected = registerViewModel::updateImageUri,
@@ -84,17 +84,6 @@ fun RegisterScreen(
             label = R.string.last_name,
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Sentences,
-                imeAction = ImeAction.Next
-            ),
-            modifier = Modifier.width(fieldWidth)
-        )
-
-        OutlinedInputFieldWithError(
-            field = formState.phoneNumber,
-            onValueChange = registerViewModel::updatePhoneNumber,
-            label = R.string.phone_number,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Phone,
                 imeAction = ImeAction.Next
             ),
             modifier = Modifier.width(fieldWidth)

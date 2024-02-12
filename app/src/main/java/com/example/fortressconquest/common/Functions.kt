@@ -47,24 +47,9 @@ fun validatePassword(input: String): ValidationResult {
     return ValidationResult.Success
 }
 
-fun validatePhoneNumber(input: String): ValidationResult {
-    if (input.isBlank()) {
-        return ValidationResult.Error(
-            UiText.StringResource(
-                resId = R.string.error_phone_empty
-            )
-        )
-    }
-
-    if (!Patterns.PHONE.matcher(input).matches()) {
-        return ValidationResult.Error(
-            UiText.StringResource(
-                resId = R.string.error_phone_invalid
-            )
-        )
-    }
-
-    return ValidationResult.Success
+// todo
+fun isLocalUriValid(uri: String): Boolean {
+    return uri.startsWith("content://")
 }
 
 fun getErrorText(validationResult: ValidationResult): UiText? {

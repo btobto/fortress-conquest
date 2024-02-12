@@ -1,6 +1,7 @@
 package com.example.fortressconquest.ui.screens.register
 
 import android.net.Uri
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,10 +11,9 @@ import com.example.fortressconquest.common.utils.UiText
 import com.example.fortressconquest.common.utils.ValidationResult
 import com.example.fortressconquest.common.validateEmail
 import com.example.fortressconquest.common.validatePassword
-import com.example.fortressconquest.common.validatePhoneNumber
 import com.example.fortressconquest.domain.model.RegistrationData
-import com.example.fortressconquest.domain.utils.Response
 import com.example.fortressconquest.domain.repository.AuthRepository
+import com.example.fortressconquest.domain.utils.Response
 import com.example.fortressconquest.ui.utils.FormField
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,13 +24,14 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
 
+private const val TAG = "RegisterVM"
+
 data class RegisterFormState(
     val email: FormField = FormField(),
     val password: FormField = FormField(),
     val firstName: FormField = FormField(),
     val lastName: FormField = FormField(),
-    val phoneNumber: FormField = FormField(),
-    val imageUri: Uri = Uri.EMPTY,
+    val imageUri: Uri? = null,
     val isPasswordVisible: Boolean = false
 )
 
@@ -99,18 +100,9 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    fun updatePhoneNumber(input: String) {
-        _registerFormState.update { currentState ->
-            currentState.copy(
-                phoneNumber = FormField(
-                    input,
-                    getErrorText(validatePhoneNumber(input))
-                )
-            )
-        }
-    }
+    fun updateImageUri(uri: Uri?) {
+        Log.d(TAG, "Picture URI: $uri")
 
-    fun updateImageUri(uri: Uri) {
         _registerFormState.update { currentState ->
             currentState.copy(
                 imageUri = uri
@@ -136,8 +128,7 @@ class RegisterViewModel @Inject constructor(
                             password = password.value,
                             firstName = firstName.value,
                             lastName = lastName.value,
-                            phoneNumber = phoneNumber.value,
-                            localPhotoUri = imageUri.toString()
+                            localPhotoUri = imageUri?.toString()
                         )
                     )
                 }
@@ -165,9 +156,7 @@ class RegisterViewModel @Inject constructor(
             email.isValid() &&
             password.isValid() &&
             firstName.isValid() &&
-            lastName.isValid() &&
-            phoneNumber.isValid() &&
-            !Uri.EMPTY.equals(imageUri)
+            lastName.isValid()
         }
     }
 

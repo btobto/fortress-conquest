@@ -7,7 +7,7 @@ data class User(
     val id: String = "",
     val firstName: String = "",
     val lastName: String = "",
-    val photoUri: String = "",
+    val photoUri: String? = null,
     val character: CharacterClass? = null,
     val xp: Int = 0,
     val level: Int = 1,
