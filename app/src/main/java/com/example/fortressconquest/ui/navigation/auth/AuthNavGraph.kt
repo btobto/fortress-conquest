@@ -6,8 +6,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.fortressconquest.ui.navigation.GraphDestination
 import com.example.fortressconquest.ui.navigation.navigateAndClearBackStack
+import com.example.fortressconquest.ui.navigation.registration.registrationGraph
 import com.example.fortressconquest.ui.screens.login.LoginScreen
-import com.example.fortressconquest.ui.screens.register.RegisterScreen
 
 fun NavGraphBuilder.authGraph(
     navController: NavHostController,
@@ -20,30 +20,16 @@ fun NavGraphBuilder.authGraph(
         composable(route = AuthDestination.Login.route) {
             LoginScreen(
                 onNavigateToRegisterScreen = {
-                    navController.navigate(AuthDestination.Register.route)
+                    navController.navigate(AuthDestination.Registration.route)
                 },
                 onLoginSuccess = {
-                    navController.navigateAndClearBackStack(
-                        GraphDestination.CharacterSelect.route
-                    )
+                    navController.navigateAndClearBackStack(GraphDestination.Main.route)
                 },
                 onLoginFailure = { error -> onShowSnackbar(error, null) }
             )
         }
 
-        composable(route = AuthDestination.Register.route) {
-            RegisterScreen(
-                onNavigateToLoginScreen = {
-                    navController.navigateAndClearBackStack(AuthDestination.Login.route)
-                },
-                onRegisterSuccess = {
-                    navController.navigateAndClearBackStack(
-                        GraphDestination.CharacterSelect.route
-                    )
-                },
-                onRegisterFailure = { error -> onShowSnackbar(error, null) }
-            )
-        }
+        registrationGraph(navController, onShowSnackbar)
     }
 }
 

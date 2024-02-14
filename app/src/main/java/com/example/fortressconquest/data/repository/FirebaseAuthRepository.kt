@@ -45,8 +45,8 @@ class FirebaseAuthRepository @Inject constructor(
         private const val DELAY_FACTOR = 2.0
     }
 
-    private val _registerInProgress = MutableStateFlow(false)
-    private val _authFlow: Flow<String?> = callbackFlow {
+    private val _registerInProgressFlow = MutableStateFlow(false)
+    private val _userIdFlow: Flow<String?> = callbackFlow {
         val authStateListener = FirebaseAuth.AuthStateListener { auth ->
             trySend(auth.currentUser?.uid)
         }
@@ -58,7 +58,7 @@ class FirebaseAuthRepository @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override val authState: StateFlow<AuthState<User>> =
-        _authFlow.combine(_registerInProgress) { id, registerInProgress ->
+        _userIdFlow.combine(_registerInProgressFlow) { id, registerInProgress ->
             return@combine when {
                 registerInProgress -> AuthState.Loading
                 id != null -> AuthState.LoggedIn(id)
@@ -93,7 +93,9 @@ class FirebaseAuthRepository @Inject constructor(
 
     override suspend fun register(registrationData: RegistrationData) {
         try {
-            _registerInProgress.emit(true)
+            Log.d(TAG, registrationData.toString())
+
+            _registerInProgressFlow.emit(true)
 
             auth.createUserWithEmailAndPassword(
                 registrationData.email,
@@ -101,6 +103,7 @@ class FirebaseAuthRepository @Inject constructor(
             ).await()
             val id = auth.currentUser!!.uid
 
+            Log.d(TAG, registrationData.toString())
 
             val uploadedImageUri = registrationData.localPhotoUri?.let {
                 storageRepository.uploadUserImage(
@@ -109,16 +112,22 @@ class FirebaseAuthRepository @Inject constructor(
                 )
             }
 
+            Log.d(TAG, registrationData.toString())
+
             usersRef.document(id).set(
                 User(
                     id = id,
                     firstName = registrationData.firstName,
                     lastName = registrationData.lastName,
-                    photoUri = uploadedImageUri
+                    photoUri = uploadedImageUri,
+                    character = registrationData.character,
                 )
             ).await()
+        } catch (e: Exception) {
+            Log.e(TAG, "Error registering user", e)
+            throw e
         } finally {
-            _registerInProgress.emit(false)
+            _registerInProgressFlow.emit(false)
         }
     }
 

@@ -5,5 +5,6 @@ data class RegistrationData(
     val password: String,
     val firstName: String,
     val lastName: String,
-    val localPhotoUri: String?
+    val localPhotoUri: String?,
+    val character: CharacterClass
 )

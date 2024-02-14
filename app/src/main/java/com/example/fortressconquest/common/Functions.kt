@@ -47,7 +47,6 @@ fun validatePassword(input: String): ValidationResult {
     return ValidationResult.Success
 }
 
-// todo
 fun isLocalUriValid(uri: String): Boolean {
     return uri.startsWith("content://")
 }

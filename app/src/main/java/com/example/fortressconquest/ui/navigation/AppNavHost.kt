@@ -1,14 +1,16 @@
 package com.example.fortressconquest.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.fortressconquest.ui.navigation.auth.authGraph
-import com.example.fortressconquest.ui.navigation.main.MainDestination
 import com.example.fortressconquest.ui.navigation.main.mainGraph
-import com.example.fortressconquest.ui.screens.character_select.CharacterSelectScreen
 import com.example.fortressconquest.ui.screens.splash.SplashScreen
 
 @Composable
@@ -28,24 +30,12 @@ fun AppNavHost(
                     navController.navigateAndClearBackStack(GraphDestination.Auth.route)
                 },
                 onNavigateToApp = {
-                    navController.navigateAndClearBackStack(
-                        GraphDestination.CharacterSelect.route
-                    )
+                    navController.navigateAndClearBackStack(GraphDestination.Main.route)
                 }
             )
         }
 
         authGraph(navController, onShowSnackbar)
-
-        composable(route = GraphDestination.CharacterSelect.route) {
-            CharacterSelectScreen(
-                onNavigateToApp = {
-                    navController.navigateAndClearBackStack(
-                        MainDestination.Map.route
-                    )
-                }
-            )
-        }
 
         mainGraph(navController)
     }
@@ -57,4 +47,13 @@ fun NavHostController.navigateAndClearBackStack(route: String) {
             inclusive = true
         }
     }
+}
+
+@Composable
+inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(navController: NavHostController): T {
+    val navGraphRoute = destination.parent?.route ?: return hiltViewModel()
+    val parentEntry = remember(this) {
+        navController.getBackStackEntry(navGraphRoute)
+    }
+    return hiltViewModel(parentEntry)
 }

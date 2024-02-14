@@ -228,7 +228,7 @@ fun MapScreenContent(
                         )
                     }
                     is Response.Error -> {
-                        LocationError(
+                        ErrorWithIcon(
                             text = targetState.error,
                             modifier = Modifier
                                 .fillMaxSize()

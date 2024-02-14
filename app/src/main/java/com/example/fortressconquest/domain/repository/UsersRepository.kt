@@ -15,7 +15,5 @@ interface UsersRepository {
 
     fun getUsersPaged(): Flow<PagingData<User>>
 
-    suspend fun setUserCharacterClass(user: User, character: CharacterClass)
-
     suspend fun onBattleWin(winner: User, xp: Int, fortress: Fortress)
 }

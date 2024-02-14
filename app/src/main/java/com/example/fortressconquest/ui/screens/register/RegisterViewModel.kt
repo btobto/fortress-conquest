@@ -11,8 +11,10 @@ import com.example.fortressconquest.common.utils.UiText
 import com.example.fortressconquest.common.utils.ValidationResult
 import com.example.fortressconquest.common.validateEmail
 import com.example.fortressconquest.common.validatePassword
+import com.example.fortressconquest.domain.model.CharacterClass
 import com.example.fortressconquest.domain.model.RegistrationData
 import com.example.fortressconquest.domain.repository.AuthRepository
+import com.example.fortressconquest.domain.repository.UsersRepository
 import com.example.fortressconquest.domain.utils.Response
 import com.example.fortressconquest.ui.utils.FormField
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -32,12 +34,13 @@ data class RegisterFormState(
     val firstName: FormField = FormField(),
     val lastName: FormField = FormField(),
     val imageUri: Uri? = null,
-    val isPasswordVisible: Boolean = false
+    val isPasswordVisible: Boolean = false,
 )
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val usersRepository: UsersRepository
 ): ViewModel() {
     private val _registerFormState = MutableStateFlow(RegisterFormState())
     val registerFormState = _registerFormState.asStateFlow()
@@ -45,6 +48,23 @@ class RegisterViewModel @Inject constructor(
     private val _registerResponseState: MutableStateFlow<Response<Boolean, UiText>> = MutableStateFlow(
         Response.None)
     val registerResponseState = _registerResponseState.asStateFlow()
+
+    private val _characterClassesState: MutableStateFlow<Response<List<CharacterClass>, UiText>> =
+        MutableStateFlow(Response.Loading)
+    val characterClassesState = _characterClassesState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            _characterClassesState.emit(
+                try {
+                    Response.Success(usersRepository.getAllCharacterClasses())
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error getting character classes", e)
+                    Response.Error(UiText.StringResource(R.string.error_generic))
+                }
+            )
+        }
+    }
 
     fun updateEmail(input: String) {
         _registerFormState.update { currentState ->
@@ -116,7 +136,7 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
-    fun submit() {
+    fun submit(character: CharacterClass) {
         viewModelScope.launch {
             _registerResponseState.update { Response.Loading }
 
@@ -128,10 +148,12 @@ class RegisterViewModel @Inject constructor(
                             password = password.value,
                             firstName = firstName.value,
                             lastName = lastName.value,
-                            localPhotoUri = imageUri?.toString()
+                            localPhotoUri = imageUri?.toString(),
+                            character = character
                         )
                     )
                 }
+
                 Response.Success(true)
             } catch (e: FirebaseAuthUserCollisionException) {
                 Response.Error(UiText.StringResource(R.string.error_auth_account_already_exists))

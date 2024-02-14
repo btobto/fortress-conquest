@@ -31,7 +31,6 @@ class FirestoreUsersRepository @Inject constructor(
 ): UsersRepository {
 
     companion object {
-        const val CHARACTER_FIELD = "character"
         const val XP_FIELD = "xp"
         const val LEVEL_FIELD = "level"
     }
@@ -59,10 +58,6 @@ class FirestoreUsersRepository @Inject constructor(
             ),
             pagingSourceFactory = { usersPagingSource }
         ).flow
-    }
-
-    override suspend fun setUserCharacterClass(user: User, character: CharacterClass) {
-        usersRef.document(user.id).update(CHARACTER_FIELD, character).await()
     }
 
     override suspend fun onBattleWin(winner: User, xp: Int, fortress: Fortress) {

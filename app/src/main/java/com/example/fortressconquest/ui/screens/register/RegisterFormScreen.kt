@@ -13,7 +13,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,22 +26,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.fortressconquest.R
 import com.example.fortressconquest.common.showToast
-import com.example.fortressconquest.domain.utils.Response
-import com.example.fortressconquest.ui.components.LoadingDialog
 import com.example.fortressconquest.ui.components.OutlinedInputFieldWithError
 import com.example.fortressconquest.ui.components.PasswordInputField
 import com.example.fortressconquest.ui.screens.register.components.ImageSelectForm
 
 @Composable
-fun RegisterScreen(
+fun RegisterFormScreen(
     onNavigateToLoginScreen: () -> Unit,
-    onRegisterSuccess: () -> Unit,
-    onRegisterFailure: suspend (String) -> Unit,
+    onNextPage: () -> Unit,
     modifier: Modifier = Modifier,
-    registerViewModel: RegisterViewModel = hiltViewModel(),
+    viewModel: RegisterViewModel = hiltViewModel(),
 ) {
-    val formState by registerViewModel.registerFormState.collectAsStateWithLifecycle()
-    val responseState by registerViewModel.registerResponseState.collectAsStateWithLifecycle()
+    // todo: top bar
+
+    val formState by viewModel.registerFormState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     val fieldWidth = dimensionResource(id = R.dimen.text_field_width)
@@ -60,8 +57,8 @@ fun RegisterScreen(
     ) {
         ImageSelectForm(
             imageUri = formState.imageUri,
-            onImageTaken = registerViewModel::updateImageUri,
-            onImageSelected = registerViewModel::updateImageUri,
+            onImageTaken = viewModel::updateImageUri,
+            onImageSelected = viewModel::updateImageUri,
             onCameraPermissionDenied = {
                 showToast(context, R.string.error_permission_camera)
             }
@@ -69,7 +66,7 @@ fun RegisterScreen(
 
         OutlinedInputFieldWithError(
             field = formState.firstName,
-            onValueChange = registerViewModel::updateFirstName,
+            onValueChange = viewModel::updateFirstName,
             label = R.string.first_name,
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Sentences,
@@ -80,7 +77,7 @@ fun RegisterScreen(
 
         OutlinedInputFieldWithError(
             field = formState.lastName,
-            onValueChange = registerViewModel::updateLastName,
+            onValueChange = viewModel::updateLastName,
             label = R.string.last_name,
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Sentences,
@@ -91,7 +88,7 @@ fun RegisterScreen(
 
         OutlinedInputFieldWithError(
             field = formState.email,
-            onValueChange = registerViewModel::updateEmail,
+            onValueChange = viewModel::updateEmail,
             label = R.string.email,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
@@ -102,8 +99,8 @@ fun RegisterScreen(
 
         PasswordInputField(
             value = formState.password.value,
-            onValueChange = registerViewModel::updatePassword,
-            onTogglePasswordVisibility = registerViewModel::togglePasswordVisibility,
+            onValueChange = viewModel::updatePassword,
+            onTogglePasswordVisibility = viewModel::togglePasswordVisibility,
             isPasswordVisible = formState.isPasswordVisible,
             errorMessage = formState.password.error?.asString(),
             keyboardOptions = KeyboardOptions(
@@ -113,10 +110,10 @@ fun RegisterScreen(
         )
 
         Button(
-            onClick = registerViewModel::submit,
-            enabled = registerViewModel.isFormValid()
+            onClick = onNextPage,
+            enabled = viewModel.isFormValid()
         ) {
-            Text(text = stringResource(id = R.string.register))
+            Text(text = stringResource(id = R.string.next))
         }
 
         Text(
@@ -125,17 +122,5 @@ fun RegisterScreen(
             modifier = Modifier
                 .clickable(onClick = onNavigateToLoginScreen)
         )
-    }
-
-    when (val response = responseState) {
-        is Response.Success -> LaunchedEffect(responseState) {
-            onRegisterSuccess()
-        }
-        is Response.Error -> LaunchedEffect(responseState) {
-            onRegisterFailure(response.error.asString(context))
-            registerViewModel.resetError()
-        }
-        is Response.Loading -> LoadingDialog()
-        else -> Unit
     }
 }

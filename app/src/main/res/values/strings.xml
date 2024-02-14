@@ -97,4 +97,5 @@
     <string name="battle_lost_text">Try again next time.</string>
 
     <string name="fortress_count">Fortresses left: %1$d</string>
+    <string name="next">Next</string>
 </resources>

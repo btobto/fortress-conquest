@@ -19,14 +19,14 @@ import androidx.compose.ui.text.style.TextAlign
 import com.example.fortressconquest.R
 
 @Composable
-fun LocationError(
+fun ErrorWithIcon(
     text: String,
     modifier: Modifier = Modifier,
     icon: ImageVector = Icons.Outlined.ErrorOutline
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement =Arrangement.Center,
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(

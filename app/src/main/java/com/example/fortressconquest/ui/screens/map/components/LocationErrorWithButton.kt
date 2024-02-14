@@ -30,7 +30,7 @@ fun LocationErrorWithButton(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LocationError(
+        ErrorWithIcon(
             text = text,
             icon = icon
         )
